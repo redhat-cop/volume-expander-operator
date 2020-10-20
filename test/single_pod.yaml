@@ -1,0 +1,47 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: expander-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: volume-leaker
+  template:
+    metadata:
+      name: volume-leaker
+      labels:
+        component: volume-leaker
+    spec:
+      volumes:
+        - name: volume
+          persistentVolumeClaim: 
+            claimName: to-be-expanded
+      containers:
+      - name: volume-leaker
+        command:
+          - /bin/bash
+        volumeMounts:
+          - name: volume
+            mountPath: /mount
+        terminationMessagePolicy: File
+        image: 'ubi8:latest'
+        args:
+          - '-c'
+          - "while true; do cat ciao >> /mount/ciao.txt; sleep 1; done"
+##while true ; do dd if=/dev/zero of=/tmp/dummyfile.$(date +%s) bs=100M count=1 &>/dev/null ; sleep 0.25s ; done
+
+
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: to-be-expanded
+  annotations: 
+    volume-expander-operator.redhat-cop.io/autoexpand: "true"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi

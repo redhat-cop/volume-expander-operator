@@ -1,0 +1,7 @@
+domain: redhatcop.redhat.io
+layout: go.kubebuilder.io/v2
+projectName: volume-expander-operator
+repo: github.com/redhat-cop/volume-expander-operator
+version: 3-alpha
+plugins:
+  go.sdk.operatorframework.io/v2-alpha: {}
