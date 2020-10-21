@@ -20,6 +20,8 @@ Note that not all of the storage driver implementations support volume expansion
 
 This operator was tested with [OCS](https://www.redhat.com/en/technologies/cloud-computing/openshift-container-storage), but should work with any other storage driver that supports volume expansion.
 
+## Development
+
 ## Running the operator locally
 
 ```shell
@@ -28,3 +30,16 @@ export base_domain=$(oc get dns cluster -o jsonpath='{.spec.baseDomain}')
 export prometheus_route=https://prometheus-k8s-openshift-monitoring.apps.${base_domain}
 make run ENABLE_WEBHOOKS=false PROMETHEUS_URL=${prometheus_route} TOKEN=${token}
 ```
+
+## Building/Pushing an image
+
+```shell
+export repo=raffaelespazzoli #replace with yours
+make docker-build IMG=quay.io/$repo/volume-expander-operator:latest
+make docker-push IMG=quay.io/$repo/volume-expander-operator:latest
+```
+
+## Deploy via OLM
+
+```shell
+operator-sdk-v1.1.0 run bundle --index-image quay.io/$repo/volume-expander-operator:latest --InstallMode OwnNamespace

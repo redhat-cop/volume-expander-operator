@@ -70,9 +70,9 @@ type PVCReconciler struct {
 	Recorder record.EventRecorder
 }
 
-// +kubebuilder:rbac:groups=,resources=persistentvolumeclaims,verbs=get;list;watch;update;patch
-// +kubebuilder:rbac:groups=,resources=persistentvolumeclaims/status,verbs=get
-// +kubebuilder:rbac:groups=,resources=pods,verbs=get;list;watch;delete
+// +kubebuilder:rbac:groups=core,resources=persistentvolumeclaims,verbs=get;list;watch;update;patch
+// +kubebuilder:rbac:groups=core,resources=persistentvolumeclaims/status,verbs=get
+// +kubebuilder:rbac:groups=core,resources=pods,verbs=get;list;watch;delete
 func (r *PVCReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	_ = context.Background()
 	logger := r.Log.WithValues("pvc", req.NamespacedName)
