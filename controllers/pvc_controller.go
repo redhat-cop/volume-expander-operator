@@ -20,6 +20,7 @@ import (
 	"context"
 	"crypto/tls"
 	"io/ioutil"
+	"math"
 	"net"
 	"net/http"
 	"os"
@@ -59,7 +60,7 @@ const tokenFile = "/var/run/secrets/kubernetes.io/serviceaccount/token"
 const tokenEnvironmentVariable = "TOKEN"
 const prometheusEnvironmentVariable = "PROMETHEUS_URL"
 
-var defaultExtendUpTo = resource.MustParse("1000Ei")
+var defaultExtendUpTo = resource.NewQuantity(math.MaxInt64, resource.DecimalSI)
 
 // PVCReconciler reconciles a PVC object
 type PVCReconciler struct {
@@ -235,11 +236,11 @@ func (r *reconcileContext) getExtendUpTo() *resource.Quantity {
 		extendUpTo, err := resource.ParseQuantity(extendUpToString)
 		if err != nil {
 			r.logger.Error(err, "unable to parse", "quantity", extendUpToString)
-			return &defaultExtendUpTo
+			return defaultExtendUpTo
 		}
 		return &extendUpTo
 	}
-	return &defaultExtendUpTo
+	return defaultExtendUpTo
 }
 
 func (r *PVCReconciler) SetupWithManager(mgr ctrl.Manager) error {

@@ -28,10 +28,9 @@ spec:
         image: 'ubi8:latest'
         args:
           - '-c'
-          - "while true; do cat ciao >> /mount/ciao.txt; sleep 1; done"
+          - "yes ciao >> /mount/ciao.txt"
+#          - "while true; do cat ciao >> /mount/ciao.txt; sleep 1; done"
 ##while true ; do dd if=/dev/zero of=/tmp/dummyfile.$(date +%s) bs=100M count=1 &>/dev/null ; sleep 0.25s ; done
-
-
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
@@ -42,6 +41,7 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
+  storageClassName: ocs-storagecluster-ceph-rbd
   resources:
     requests:
       storage: 1Gi
