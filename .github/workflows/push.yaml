@@ -22,7 +22,7 @@ jobs:
         chmod +x operator-sdk-${RELEASE_VERSION}-x86_64-linux-gnu
         mkdir ${HOME}/bin
         mv operator-sdk-${RELEASE_VERSION}-x86_64-linux-gnu ${HOME}/bin/operator-sdk
-        echo "::add-path::${HOME}/bin"
+        echo "${HOME}/bin" >> $GITHUB_PATH
 
     - name: build code
       run:  make VERSION=latest
@@ -53,11 +53,9 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: .
-        dockerfile: ./Dockerfile
-        registry: quay.io
-        repository: ${GITHUB_ACTOR}
+        file: ./Dockerfile
         push: ${{ github.event_name != 'pull_request' }}
-        tags: "${GITHUB_ACTOR}/volume-expander-operator:latest"
+        tags: "quay.io/${GITHUB_ACTOR}/volume-expander-operator:latest"
 
     - name: "Build and Push Bundle Image"
       uses: docker/build-push-action@v2
