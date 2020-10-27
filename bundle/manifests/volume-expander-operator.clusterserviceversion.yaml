@@ -13,7 +13,7 @@ metadata:
     operators.operatorframework.io/project_layout: go.kubebuilder.io/v2
     repository: https://github.com/redhat-cop/volume-expansion-operator
     support: Best Effort
-  name: volume-expander-operator.v0.0.1
+  name: volume-expander-operator.v0.1.0
   namespace: placeholder
 spec:
   apiservicedefinitions: {}
@@ -102,7 +102,7 @@ spec:
                 - --enable-leader-election
                 command:
                 - /manager
-                image: controller:latest
+                image: quay.io/raffaelespazzoli/volume-expander-operator:latest
                 name: manager
                 resources:
                   limits:
@@ -166,4 +166,4 @@ spec:
   maturity: alpha
   provider:
     name: Red Hat Community of Practice
-  version: 0.0.1
+  version: 0.1.0

@@ -42,26 +42,29 @@ make docker-push IMG=quay.io/$repo/volume-expander-operator:latest
 ## Deploy to OLM via bundle
 
 ```shell
-make bundle
+make manifests
+make bundle IMG=quay.io/$repo/volume-expander-operator:latest
 operator-sdk bundle validate ./bundle --select-optional name=operatorhub
 make bundle-build BUNDLE_IMG=quay.io/$repo/volume-expander-operator-controller-bundle:latest
 podman push quay.io/$repo/volume-expander-operator-controller-bundle:latest
 operator-sdk bundle validate quay.io/$repo/volume-expander-operator-controller-bundle:latest --select-optional name=operatorhub
-operator-sdk run bundle --install-mode AllNamespaces quay.io/$repo/volume-expander-operator-controller-bundle:latest
+oc new-project volume-expander-operator
+operator-sdk cleanup volume-expander-operator -n volume-expander-operator
+operator-sdk run bundle --install-mode AllNamespaces -n volume-expander-operator quay.io/$repo/volume-expander-operator-controller-bundle:latest 
 ```
 
-## Deploy to OLM via Packagemanifest
+Troublkeshooting:
 
 ```shell
-make packagemanifests
-not working
+operator-sdk cleanup volume-expander-operator -n volume-expander-operator
+oc delete operatorgroup operator-sdk-og
+oc delete catalogsource volume-expander-operator-catalog
 ```
-
 
 Failing:
 
 ```shell
-operator-sdk olm status
+operator-sdk olm status --olm-namespace openshift-operator-lifecycle-manager
 operator-sdk run bundle --install-mode AllNamespaces quay.io/$repo/volume-expander-operator-controller-bundle:latest
 ```
 
