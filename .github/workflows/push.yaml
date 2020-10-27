@@ -55,14 +55,12 @@ jobs:
         context: .
         file: ./Dockerfile
         push: ${{ github.event_name != 'pull_request' }}
-        tags: "quay.io/${GITHUB_ACTOR}/volume-expander-operator:latest"
+        tags: "quay.io/${{ env.GITHUB_ACTOR }}/volume-expander-operator:latest"
 
     - name: "Build and Push Bundle Image"
       uses: docker/build-push-action@v2
       with:
         context: .
-        dockerfile: ./bundle.Dockerfile
-        registry: quay.io
-        repository: ${GITHUB_ACTOR}
+        file: ./bundle.Dockerfile
         push: ${{ github.event_name != 'pull_request' }}
-        tags: "${GITHUB_ACTOR}/volume-expander-operator-controller-bundle:latest"        
+        tags: "quay.io/${{ env.GITHUB_ACTOR }}/volume-expander-operator-controller-bundle:latest"        
