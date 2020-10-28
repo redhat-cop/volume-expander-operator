@@ -30,7 +30,7 @@ jobs:
       
     - name: build bundle
       shell: bash
-      run: make bundle IMG=quay.io/${GITHUB_ACTOR}/volume-expander-operator:latest VERSION=latest
+      run: make bundle IMG=quay.io/${GITHUB_ACTOR}/volume-expander-operator:latest
 
     - name: verify bundle
       shell: bash

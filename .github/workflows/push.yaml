@@ -40,7 +40,7 @@ jobs:
       
     - name: build bundle
       shell: bash 
-      run: make bundle IMG=quay.io/${{ github.actor }}/volume-expander-operator:${VERSION} VERSION=${VERSION}
+      run: make bundle IMG=quay.io/${{ github.actor }}/volume-expander-operator:${VERSION}
 
     - name: verify bundle
       shell: bash
