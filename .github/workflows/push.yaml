@@ -79,7 +79,7 @@ jobs:
         context: .
         file: ./bundle.Dockerfile
         push: true
-        tags: "quay.io/${{ github.actor }}/volume-expander-operator-controller-bundle:${{ BUNDLE_IMAGE_TAG }}" 
+        tags: "quay.io/${{ github.actor }}/volume-expander-operator-controller-bundle:${{ env.BUNDLE_IMAGE_TAG }}" 
 
     - name: "Verify bundle image"
       shell: bash
