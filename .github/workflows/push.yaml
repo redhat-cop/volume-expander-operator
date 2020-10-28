@@ -25,14 +25,14 @@ jobs:
         echo "${HOME}/bin" >> $GITHUB_PATH
 
     - name: Get the version
-      id: get_version
+      id: get_version1
       if: "startsWith(github.ref, 'refs/tags')" 
-      run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+      run: echo "VERSION=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
 
     - name: Get the version
-      id: get_version
+      id: get_version2
       if: "not startsWith(github.ref, 'refs/tags')" 
-      run: echo ::set-output name=VERSION::"latest"      
+      run: echo "VERSION=latest" >> $GITHUB_ENV      
 
 
     - name: build code
@@ -86,7 +86,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Get the version
         id: get_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+        run: echo "VERSION=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
       - name: build chart
         shell: bash
         run: make helmchart VERSION=${VERSION}
@@ -117,15 +117,7 @@ jobs:
           git fetch --prune --unshallow
       - name: Get the version
         id: get_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
-      - name: Download Artifact
-        uses: actions/download-artifact@v1
-        with:
-          name: quay-operator
-          path: build/_output/bin
-      - name: Compress Archive
-        run: |
-          tar -czf build/_output/bin/quay-operator-${{ steps.get_version.outputs.VERSION }}.tar.gz build/_output/bin/quay-operator
+        run: echo "VERSION=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
       - name: Generate Changelog
         run: |
           LATEST_TAG=$(git tag --sort=creatordate | sed '$!d')
@@ -143,7 +135,5 @@ jobs:
           body_path: ${{ steps.get_version.outputs.VERSION }}-CHANGELOG.txt
           draft: false
           prerelease: false
-          files: |
-            build/_output/bin/quay-operator-${{ steps.get_version.outputs.VERSION }}.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}        
