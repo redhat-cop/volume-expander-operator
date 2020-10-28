@@ -27,12 +27,16 @@ jobs:
     - name: Get the version for tags
       id: get_version1
       if: "startsWith(github.ref, 'refs/tags')" 
-      run: echo "VERSION=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
+      run: |
+        echo "VERSION=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
+        echo "BUNDLE_VERSION=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
 
     - name: Get the version for merge
       id: get_version2
       if: "! startsWith(github.ref, 'refs/tags')" 
-      run: echo "VERSION=latest" >> $GITHUB_ENV      
+      run: |
+        echo "VERSION=latest" >> $GITHUB_ENV
+        echo "BUNDLE_VERSION=0.0.1" >> $GITHUB_ENV      
 
     - name: build code
       run:  make VERSION=${VERSION}
@@ -40,12 +44,11 @@ jobs:
       
     - name: build bundle
       shell: bash 
-      run: make bundle IMG=quay.io/${{ github.actor }}/volume-expander-operator:${VERSION}
+      run: make bundle IMG=quay.io/${{ github.actor }}/volume-expander-operator:${BUNDLE_VERSION} VERSION=${BUNDLE_VERSION}
 
     - name: verify bundle
       shell: bash
       run: operator-sdk bundle validate ./bundle --select-optional name=operatorhub
-      
 
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v1
@@ -74,11 +77,11 @@ jobs:
         context: .
         file: ./bundle.Dockerfile
         push: true
-        tags: "quay.io/${{ github.actor }}/volume-expander-operator-controller-bundle:${VERSION}" 
+        tags: "quay.io/${{ github.actor }}/volume-expander-operator-controller-bundle:${BUNDLE_VERSION}" 
 
     - name: "Verify bundle image"
       shell: bash
-      run: operator-sdk bundle validate quay.io/${{ github.actor }}/volume-expander-operator:${VERSION} --select-optional name=operatorhub    
+      run: operator-sdk bundle validate quay.io/${{ github.actor }}/volume-expander-operator:${BUNDLE_VERSION} --select-optional name=operatorhub    
       
   release-helm-chart:
     name: Helm Chart Release      
