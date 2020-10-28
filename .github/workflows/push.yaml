@@ -81,7 +81,7 @@ jobs:
 
     - name: "Verify bundle image"
       shell: bash
-      run: operator-sdk bundle validate quay.io/${{ github.actor }}/volume-expander-operator:${BUNDLE_VERSION} --select-optional name=operatorhub    
+      run: operator-sdk bundle validate quay.io/${{ github.actor }}/volume-expander-operator-controller-bundle:${BUNDLE_VERSION} --select-optional name=operatorhub    
       
   release-helm-chart:
     name: Helm Chart Release      
