@@ -44,7 +44,7 @@ jobs:
       
     - name: build bundle
       shell: bash 
-      run: make bundle IMG=quay.io/${{ github.actor }}/volume-expander-operator:${BUNDLE_VERSION} VERSION=${BUNDLE_VERSION}
+      run: make bundle IMG=quay.io/${{ github.actor }}/volume-expander-operator:v${BUNDLE_VERSION} VERSION=${BUNDLE_VERSION}
 
     - name: verify bundle
       shell: bash
@@ -69,7 +69,7 @@ jobs:
         context: .
         file: ./Dockerfile
         push: true
-        tags: "quay.io/${{ github.actor }}/volume-expander-operator:${{ env.VERSION }}"
+        tags: "quay.io/${{ github.actor }}/volume-expander-operator:v${{ env.VERSION }}"
 
     - name: "Build and Push Bundle Image"
       uses: docker/build-push-action@v2
@@ -77,11 +77,11 @@ jobs:
         context: .
         file: ./bundle.Dockerfile
         push: true
-        tags: "quay.io/${{ github.actor }}/volume-expander-operator-controller-bundle:${{ env.BUNDLE_VERSION }}" 
+        tags: "quay.io/${{ github.actor }}/volume-expander-operator-controller-bundle:v${{ env.BUNDLE_VERSION }}" 
 
     - name: "Verify bundle image"
       shell: bash
-      run: operator-sdk bundle validate quay.io/${{ github.actor }}/volume-expander-operator-controller-bundle:${BUNDLE_VERSION} --select-optional name=operatorhub    
+      run: operator-sdk bundle validate quay.io/${{ github.actor }}/volume-expander-operator-controller-bundle:v${BUNDLE_VERSION} --select-optional name=operatorhub    
       
   release-helm-chart:
     name: Helm Chart Release      
