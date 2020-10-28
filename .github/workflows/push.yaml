@@ -69,7 +69,7 @@ jobs:
         context: .
         file: ./Dockerfile
         push: true
-        tags: "quay.io/${{ github.actor }}/volume-expander-operator:${VERSION}"
+        tags: "quay.io/${{ github.actor }}/volume-expander-operator:${{ env.VERSION }}"
 
     - name: "Build and Push Bundle Image"
       uses: docker/build-push-action@v2
@@ -77,7 +77,7 @@ jobs:
         context: .
         file: ./bundle.Dockerfile
         push: true
-        tags: "quay.io/${{ github.actor }}/volume-expander-operator-controller-bundle:${BUNDLE_VERSION}" 
+        tags: "quay.io/${{ github.actor }}/volume-expander-operator-controller-bundle:${{ env.BUNDLE_VERSION }}" 
 
     - name: "Verify bundle image"
       shell: bash
