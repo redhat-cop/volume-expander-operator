@@ -25,13 +25,13 @@ jobs:
         echo "${HOME}/bin" >> $GITHUB_PATH
 
     - name: build code
+      shell: bash
       run:  make VERSION=latest
-      shell: bash
       
-    - name: build bundle 
-      run: make bundle IMG=quay.io/${GITHUB_ACTOR}/volume-expander-operator:latest
+    - name: build bundle
       shell: bash
+      run: make bundle IMG=quay.io/${GITHUB_ACTOR}/volume-expander-operator:latest VERSION=latest
 
-    - name: verify bundle 
-      run: make bundle IMG=quay.io/${GITHUB_ACTOR}/volume-expander-operator:latest
+    - name: verify bundle
       shell: bash
+      run: operator-sdk bundle validate ./bundle --select-optional name=operatorhub
