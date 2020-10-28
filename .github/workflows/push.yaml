@@ -24,16 +24,27 @@ jobs:
         mv operator-sdk-${RELEASE_VERSION}-x86_64-linux-gnu ${HOME}/bin/operator-sdk
         echo "${HOME}/bin" >> $GITHUB_PATH
 
+    - name: Get the version
+      id: get_version
+      if: "startsWith(github.ref, 'refs/tags')" 
+      run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+
+    - name: Get the version
+      id: get_version
+      if: "not startsWith(github.ref, 'refs/tags')" 
+      run: echo ::set-output name=VERSION::"latest"      
+
+
     - name: build code
-      run:  make VERSION=latest
+      run:  make VERSION=${VERSION}
       shell: bash
       
     - name: build bundle 
-      run: make bundle IMG=quay.io/${GITHUB_ACTOR}/volume-expander-operator:latest
+      run: make bundle IMG=quay.io/${GITHUB_ACTOR}/volume-expander-operator:${VERSION}
       shell: bash
 
     - name: verify bundle 
-      run: make bundle IMG=quay.io/${GITHUB_ACTOR}/volume-expander-operator:latest
+      run: make bundle IMG=quay.io/${GITHUB_ACTOR}/volume-expander-operator:${VERSION}
       shell: bash
 
     - name: Set up QEMU
@@ -54,13 +65,85 @@ jobs:
       with:
         context: .
         file: ./Dockerfile
-        push: ${{ github.event_name != 'pull_request' }}
-        tags: "quay.io/${{ github.actor }}/volume-expander-operator:latest"
+        push: true
+        tags: "quay.io/${{ github.actor }}/volume-expander-operator:${VERSION}"
 
     - name: "Build and Push Bundle Image"
       uses: docker/build-push-action@v2
       with:
         context: .
         file: ./bundle.Dockerfile
-        push: ${{ github.event_name != 'pull_request' }}
-        tags: "quay.io/${{ github.actor }}/volume-expander-operator-controller-bundle:latest"        
+        push: true
+        tags: "quay.io/${{ github.actor }}/volume-expander-operator-controller-bundle:${VERSION}" 
+      
+  release-helm-chart:
+    name: Helm Chart Release      
+    runs-on: ubuntu-latest
+    if: "startsWith(github.ref, 'refs/tags')"
+    needs: ["build"]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+      - name: build chart
+        shell: bash
+        run: make helmchart VERSION=${VERSION}
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@v1.0.0
+        with:
+          charts_dir: ./charts
+        env:
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"        
+
+
+
+
+  release-github:
+    name: GitHub Release
+    runs-on: ubuntu-latest
+    if: "startsWith(github.ref, 'refs/tags')"
+    needs: ["build"]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - run: |
+          git fetch --prune --unshallow
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+      - name: Download Artifact
+        uses: actions/download-artifact@v1
+        with:
+          name: quay-operator
+          path: build/_output/bin
+      - name: Compress Archive
+        run: |
+          tar -czf build/_output/bin/quay-operator-${{ steps.get_version.outputs.VERSION }}.tar.gz build/_output/bin/quay-operator
+      - name: Generate Changelog
+        run: |
+          LATEST_TAG=$(git tag --sort=creatordate | sed '$!d')
+          PREVIOUS_TAG=$(git tag --sort=creatordate | sed 'x;$!d')
+          if [ -z "${PREVIOUS_TAG}" ]; then
+            REV_RANGE=${LATEST_TAG}
+          else
+            REV_RANGE=${PREVIOUS_TAG}..${LATEST_TAG}
+          fi
+          git log --pretty=format:"- %s %H (%aN)" --no-merges ${REV_RANGE} > ${{ steps.get_version.outputs.VERSION }}-CHANGELOG.txt
+          cat ${{ steps.get_version.outputs.VERSION }}-CHANGELOG.txt
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          body_path: ${{ steps.get_version.outputs.VERSION }}-CHANGELOG.txt
+          draft: false
+          prerelease: false
+          files: |
+            build/_output/bin/quay-operator-${{ steps.get_version.outputs.VERSION }}.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}        

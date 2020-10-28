@@ -57,6 +57,12 @@ deploy: manifests kustomize
 manifests: controller-gen
 	$(CONTROLLER_GEN) $(CRD_OPTIONS) rbac:roleName=manager-role webhook paths="./..." output:crd:artifacts:config=config/crd/bases
 
+# Generate helm chart
+helmchart: kustomize
+	mkdir -p ./charts/volume-expander-operator/templates
+	$(KUSTOMIZE) build ./config/default > ./charts/volume-expander-operator/templates/manifest.yaml
+	version=${VERSION} envsubst < ./config/helmchart/Chart.yaml.tpl  > ./charts/volume-expander-operator/Chart.yaml
+
 # Run go fmt against code
 fmt:
 	go fmt ./...
