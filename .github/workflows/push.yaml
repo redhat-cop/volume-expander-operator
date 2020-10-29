@@ -103,7 +103,7 @@ jobs:
         run: echo "VERSION=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
       - name: build chart
         shell: bash
-        run: make helmchart VERSION=${VERSION} IMG=quay.io/${{ github.actor }}/volume-expander-operator:v${version}
+        run: make helmchart VERSION=${VERSION} IMG=quay.io/${{ github.actor }}/volume-expander-operator:${version}
       - name: Configure Git
         run: |
           git config user.name "$GITHUB_ACTOR"
@@ -141,8 +141,8 @@ jobs:
           else
             REV_RANGE=${PREVIOUS_TAG}..${LATEST_TAG}
           fi
-          git log --pretty=format:"- %s %H (%aN)" --no-merges ${REV_RANGE} > ${{ steps.get_version.outputs.VERSION }}-CHANGELOG.txt
-          cat ${{ steps.get_version.outputs.VERSION }}-CHANGELOG.txt
+          git log --pretty=format:"- %s %H (%aN)" --no-merges ${REV_RANGE} > ${VERSION}-CHANGELOG.txt
+          cat ${VERSION}-CHANGELOG.txt
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
