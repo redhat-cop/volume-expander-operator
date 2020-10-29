@@ -76,7 +76,7 @@ helmchart-repo: helmchart
 helmchart-repo-push: helmchart-repo	
 	git -C ${HELM_REPO_DEST} add .
 	git -C ${HELM_REPO_DEST} status
-	git -C ${HELM_REPO_DEST} commit -m "Release v${VERSION}"
+	git -C ${HELM_REPO_DEST} commit -m "Release ${VERSION}"
 	git -C ${HELM_REPO_DEST} push origin "gh-pages"
 
 # Run go fmt against code
