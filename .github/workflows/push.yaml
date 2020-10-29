@@ -146,7 +146,7 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          body_path: ${{ steps.get_version.outputs.VERSION }}-CHANGELOG.txt
+          body_path: ${{ env.VERSION }}-CHANGELOG.txt
           draft: false
           prerelease: false
         env:
