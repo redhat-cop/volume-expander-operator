@@ -60,6 +60,7 @@ manifests: controller-gen
 # Generate helm chart
 helmchart: kustomize
 	mkdir -p ./charts/volume-expander-operator/templates
+	cd config/manager && $(KUSTOMIZE) edit set image controller=$(IMG)
 	$(KUSTOMIZE) build ./config/default > ./charts/volume-expander-operator/templates/manifest.yaml
 	version=${VERSION} envsubst < ./config/helmchart/Chart.yaml.tpl  > ./charts/volume-expander-operator/Chart.yaml
 

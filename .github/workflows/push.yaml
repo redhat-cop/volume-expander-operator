@@ -98,7 +98,7 @@ jobs:
         run: echo "VERSION=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
       - name: build chart
         shell: bash
-        run: make helmchart VERSION=${VERSION}
+        run: make helmchart VERSION=${VERSION} IMG=quay.io/${{ github.actor }}/volume-expander-operator:v${version}
       - name: Configure Git
         run: |
           git config user.name "$GITHUB_ACTOR"

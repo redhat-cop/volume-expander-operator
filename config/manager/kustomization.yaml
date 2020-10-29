@@ -5,4 +5,4 @@ kind: Kustomization
 images:
 - name: controller
   newName: quay.io/raffaelespazzoli/volume-expander-operator
-  newTag: latest
+  newTag: v0.1.0
