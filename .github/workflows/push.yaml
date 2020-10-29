@@ -26,19 +26,24 @@ jobs:
 
     - name: Get the version for tags
       id: get_version1
-      if: "startsWith(github.ref, 'refs/tags')" 
+      if: "startsWith(github.ref, 'refs/tags')"
+      shell: bash
       run: |
-        echo "OPERATOR_IMAGE_TAG=v${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
-        echo "BUNDLE_IMAGE_TAG=v${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
-        echo "BUNDLE_VERSION=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
+        echo "OPERATOR_IMAGE_TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
+        echo "BUNDLE_IMAGE_TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
+        export TAG=${GITHUB_REF/refs\/tags\//}
+        echo "BUNDLE_VERSION=${TAG:1}" >> $GITHUB_ENV
+        # export VALID_SEMVER=[[ $BUNDLEVERSION =~ ^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$ ]] && echo "true" || echo "false" 
+        # if [ VALID_SEMVER != 'true' ]; then echo "invalid semver tag ${GITHUB_REF/refs\/tags\//}; exit 1; endif
 
     - name: Get the version for merge
       id: get_version2
-      if: "! startsWith(github.ref, 'refs/tags')" 
+      if: "! startsWith(github.ref, 'refs/tags')"
+      shell: bash 
       run: |
         echo "OPERATOR_IMAGE_TAG=latest" >> $GITHUB_ENV
         echo "BUNDLE_IMAGE_TAG=v0.0.0" >> $GITHUB_ENV
-        echo "BUNDLE_VERSION=0.0.0" >> $GITHUB_ENV      
+        echo "BUNDLE_VERSION=0.0.0" >> $GITHUB_ENV 
 
     - name: build code
       run:  make
