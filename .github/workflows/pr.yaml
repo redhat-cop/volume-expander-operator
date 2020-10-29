@@ -24,6 +24,10 @@ jobs:
         mv operator-sdk-${RELEASE_VERSION}-x86_64-linux-gnu ${HOME}/bin/operator-sdk 
         echo "${HOME}/bin" >> $GITHUB_PATH
 
+    - name: Get Helm
+      shell: bash
+      run: curl -LO https://git.io/get_helm.sh && chmod 700 get_helm.sh && ./get_helm.sh        
+
     - name: build code
       shell: bash
       run:  make VERSION=latest
@@ -35,3 +39,7 @@ jobs:
     - name: verify bundle
       shell: bash
       run: operator-sdk bundle validate ./bundle --select-optional name=operatorhub
+
+    - name: build chart
+      shell: bash
+      run: make helmchart VERSION=${VERSION} IMG=quay.io/${{ github.actor }}/$(basename $GITHUB_REPOSITORY):${version}         

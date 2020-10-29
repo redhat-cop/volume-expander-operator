@@ -24,6 +24,10 @@ jobs:
         mv operator-sdk-${RELEASE_VERSION}-x86_64-linux-gnu ${HOME}/bin/operator-sdk
         echo "${HOME}/bin" >> $GITHUB_PATH
 
+    - name: Get Helm
+      shell: bash
+      run: curl -LO https://git.io/get_helm.sh && chmod 700 get_helm.sh && ./get_helm.sh
+
     - name: Get the version for tags
       id: get_version1
       if: "startsWith(github.ref, 'refs/tags')"
@@ -35,6 +39,8 @@ jobs:
         echo "BUNDLE_VERSION=${TAG:1}" >> $GITHUB_ENV
         export SEMVER_COMPLIANT=$(echo ${TAG:1} | egrep '^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-])(?:\.(?:0|[1-9]\d|\d*[a-zA-Z-][0-9a-zA-Z-]))))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$')
         if [ -z "$SEMVER_COMPLIANT" ]; then   echo "invalid semver tag ${GITHUB_REF/refs\/tags\//}"; exit 1; fi
+
+
 
     - name: Get the version for merge
       id: get_version2
@@ -51,11 +57,15 @@ jobs:
       
     - name: build bundle
       shell: bash 
-      run: make bundle IMG=quay.io/${{ github.actor }}/volume-expander-operator:${OPERATOR_IMAGE_TAG} VERSION=${BUNDLE_VERSION}
+      run: make bundle IMG=quay.io/${{ github.actor }}/$(basename $GITHUB_REPOSITORY):${OPERATOR_IMAGE_TAG} VERSION=${BUNDLE_VERSION}
 
     - name: verify bundle
       shell: bash
       run: operator-sdk bundle validate ./bundle --select-optional name=operatorhub
+
+    - name: build chart
+      shell: bash
+      run: make helmchart VERSION=${VERSION} IMG=quay.io/${{ github.actor }}/$(basename $GITHUB_REPOSITORY):${version}      
 
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v1
@@ -88,7 +98,7 @@ jobs:
 
     - name: "Verify bundle image"
       shell: bash
-      run: operator-sdk bundle validate quay.io/${{ github.actor }}/volume-expander-operator-controller-bundle:${BUNDLE_IMAGE_TAG} --select-optional name=operatorhub    
+      run: operator-sdk bundle validate quay.io/${{ github.actor }}/$(basename $GITHUB_REPOSITORY)-controller-bundle:${BUNDLE_IMAGE_TAG} --select-optional name=operatorhub    
       
   release-helm-chart:
     name: Helm Chart Release      
@@ -98,26 +108,33 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
+      - name: Get Helm
+        shell: bash
+        run: curl -LO https://git.io/get_helm.sh && chmod 700 get_helm.sh && ./get_helm.sh        
+      
       - name: Get the version
         id: get_version
         run: echo "VERSION=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
-      - name: build chart
-        shell: bash
-        run: make helmchart VERSION=${VERSION} IMG=quay.io/${{ github.actor }}/volume-expander-operator:${version}
+
       - name: Configure Git
+        shell: bash
         run: |
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
-      - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.0.0
+      - name: checkout gh-pages
+        uses: actions/checkout@v2
         with:
-          charts_dir: ./charts
-        env:
-          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"        
+          path: ./tmp/gh-pages
 
-
-
+      - name: Build helm chart repo
+        shell: bash
+        run: make helmchart-repo VERSION=${VERSION} IMG=quay.io/${{ github.actor }}/$(basename $GITHUB_REPOSITORY):${version} CHART_REPO_URL=https://${{ github.actor }}.github.io/$(basename $GITHUB_REPOSITORY) HELM_REPO_DEST=./tmp/gh-pages
+      
+      - name: push helm repo to gh-pages
+        shell: bash
+        run: make helmchart-repo-push VERSION=${VERSION} IMG=quay.io/${{ github.actor }}/$(basename $GITHUB_REPOSITORY):${version} CHART_REPO_URL=https://${{ github.actor }}.github.io/$(basename $GITHUB_REPOSITORY) HELM_REPO_DEST=./tmp/gh-pages
 
   release-github:
     name: GitHub Release

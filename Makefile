@@ -11,6 +11,9 @@ BUNDLE_DEFAULT_CHANNEL := --default-channel=$(DEFAULT_CHANNEL)
 endif
 BUNDLE_METADATA_OPTS ?= $(BUNDLE_CHANNELS) $(BUNDLE_DEFAULT_CHANNEL)
 
+CHART_REPO_URL ?= http://example.com
+HELM_REPO_DEST ?= /tmp/gh-pages
+
 # Image URL to use all building/pushing image targets
 IMG ?= controller:latest
 # Produce CRDs that work back to Kubernetes 1.11 (no version conversion)
@@ -63,6 +66,18 @@ helmchart: kustomize
 	cd config/manager && $(KUSTOMIZE) edit set image controller=$(IMG)
 	$(KUSTOMIZE) build ./config/default > ./charts/volume-expander-operator/templates/manifest.yaml
 	version=${VERSION} envsubst < ./config/helmchart/Chart.yaml.tpl  > ./charts/volume-expander-operator/Chart.yaml
+	helm lint ./charts/volume-expander-operator
+
+helmchart-repo: helmchart
+	mkdir -p ${HELM_REPO_DEST}/volume-expander-operator
+	helm package -d ${HELM_REPO_DEST}/volume-expander-operator ./charts/volume-expander-operator
+	helm repo index --url ${CHART_REPO_URL} ${HELM_REPO_DEST}
+
+helmchart-repo-push: helmchart-repo	
+	git -C ${HELM_REPO_DEST} add .
+	git -C ${HELM_REPO_DEST} status
+	git -C ${HELM_REPO_DEST} commit -m "Release v${VERSION}"
+	git -C ${HELM_REPO_DEST} push origin "gh-pages"
 
 # Run go fmt against code
 fmt:
