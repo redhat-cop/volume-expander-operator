@@ -119,6 +119,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           path: ./tmp/gh-pages
+          ref: gh-pages
 
       - name: Build helm chart repo
         shell: bash
