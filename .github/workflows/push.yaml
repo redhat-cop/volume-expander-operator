@@ -24,10 +24,6 @@ jobs:
         mv operator-sdk-${RELEASE_VERSION}-x86_64-linux-gnu ${HOME}/bin/operator-sdk
         echo "${HOME}/bin" >> $GITHUB_PATH
 
-    - name: Get Helm
-      shell: bash
-      run: curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 && chmod 700 get_helm.sh && ./get_helm.sh
-
     - name: Get the version for tags
       id: get_version1
       if: "startsWith(github.ref, 'refs/tags')"
@@ -107,11 +103,7 @@ jobs:
     needs: ["build"]
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Get Helm
-        shell: bash
-        run: curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 && chmod 700 get_helm.sh && ./get_helm.sh        
+        uses: actions/checkout@v2       
       
       - name: Get the version
         id: get_version
@@ -120,8 +112,8 @@ jobs:
       - name: Configure Git
         shell: bash
         run: |
-          git config user.name "$GITHUB_ACTOR"
-          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+          git --global config user.name "$GITHUB_ACTOR"
+          git --global config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
       - name: checkout gh-pages
         uses: actions/checkout@v2
