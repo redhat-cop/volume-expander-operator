@@ -42,4 +42,4 @@ jobs:
 
     - name: build chart
       shell: bash
-      run: make helmchart VERSION=${VERSION} IMG=quay.io/${{ github.actor }}/$(basename $GITHUB_REPOSITORY):${version}         
+      run: make helmchart VERSION=latest IMG=quay.io/${{ github.actor }}/$(basename $GITHUB_REPOSITORY):latest         

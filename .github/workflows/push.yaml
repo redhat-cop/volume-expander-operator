@@ -65,7 +65,7 @@ jobs:
 
     - name: build chart
       shell: bash
-      run: make helmchart VERSION=${VERSION} IMG=quay.io/${{ github.actor }}/$(basename $GITHUB_REPOSITORY):${version}      
+      run: make helmchart VERSION=${BUNDLE_VERSION} IMG=quay.io/${{ github.actor }}/$(basename $GITHUB_REPOSITORY):${OPERATOR_IMAGE_TAG}      
 
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v1
