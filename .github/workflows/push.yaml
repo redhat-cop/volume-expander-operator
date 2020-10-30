@@ -176,7 +176,7 @@ jobs:
       - name: checkout community-operators
         uses: actions/checkout@v2
         with:
-          repository: https://github.com/operator-framework/community-operators
+          repository: operator-framework/community-operators
           path: ./tmp/community-operators
       - name: PR to community operators
         shell: bash
