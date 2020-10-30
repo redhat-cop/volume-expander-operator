@@ -198,7 +198,7 @@ jobs:
       - name: check whether it is first release
         shell: bash
         run: |
-          echo first_release=$([[ ! -d "./tmp/community-operators/community-operators/volume-expander-operator" ]] && 'true') >> $GITHUB_ENV
+          echo first_release=$([[ ! -d "./tmp/community-operators/community-operators/volume-expander-operator" ]] && echo 'true' || echo 'false') >> $GITHUB_ENV
           echo $first_release
 
       
@@ -280,7 +280,7 @@ jobs:
         with:
           path: ./tmp/community-operators
           commit-message: volume-expander-operator release ${{ env.VERSION }}
-          committer: ${{ github.actor }}
+          committer: ${{ github.actor }} <raffaele.spazzoli@gmail.com>
           author: Raffaele Spazzol <raffaele.spazzoli@gmail.com>
           signoff: true
           branch: volume-expander-operator-${{ env.VERSION }}
