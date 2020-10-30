@@ -186,7 +186,9 @@ jobs:
           echo "${HOME}/bin" >> $GITHUB_PATH
       - name: Get the version
         id: get_version
-        run: echo "VERSION=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
+        run: |
+          export TAG=${GITHUB_REF/refs\/tags\//}
+          echo "VERSION=${TAG:1}" >> $GITHUB_ENV
       - name: checkout community-operators
         uses: actions/checkout@v2
         with:
