@@ -1,4 +1,4 @@
-global-load-balancer-operator initial commit
+volume-expander-operator initial commit
 
 ### New Submissions
 
