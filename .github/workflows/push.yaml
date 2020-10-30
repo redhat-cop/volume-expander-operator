@@ -213,8 +213,8 @@ jobs:
         with:
           path: ./tmp/community-operators
           commit-message: volume-expander-operator release ${{ env.VERSION }}
-          committer: ${{ github.actor }}
-          author: Raffaele Spazzol <raffaele.spazzoli@gmail.com>
+          committer: ${{ github.actor }} <raffaele.spazzoli@gmail.com>
+          author: ${{ github.actor }} <raffaele.spazzoli@gmail.com>
           signoff: true
           branch: volume-expander-operator-${{ env.VERSION }}
           delete-branch: true
