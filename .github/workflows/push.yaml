@@ -198,7 +198,7 @@ jobs:
       - name: check whether it is first release
         shell: bash
         run: |
-          echo first_release=$([[ ! -d "./tmp/community-operators/community-operators/volume-expander-operator" ]] && "true") >> $GITHUB_ENV
+          echo first_release=$([[ ! -d "./tmp/community-operators/community-operators/volume-expander-operator" ]] && 'true') >> $GITHUB_ENV
           echo $first_release
 
       
@@ -212,7 +212,7 @@ jobs:
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
-        if: ${{ startsWith( env.first_release, "true" ) }}
+        if: ${{ startsWith( env.first_release, 'true' ) }}
         with:
           path: ./tmp/community-operators
           commit-message: volume-expander-operator release ${{ env.VERSION }}
@@ -276,7 +276,7 @@ jobs:
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
-        if: ${{ ! startsWith( env.first_release, "true" ) }} 
+        if: ${{ ! startsWith( env.first_release, 'true' ) }} 
         with:
           path: ./tmp/community-operators
           commit-message: volume-expander-operator release ${{ env.VERSION }}
