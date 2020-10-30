@@ -184,6 +184,11 @@ jobs:
           mkdir ${HOME}/bin
           mv operator-sdk-${RELEASE_VERSION}-x86_64-linux-gnu ${HOME}/bin/operator-sdk
           echo "${HOME}/bin" >> $GITHUB_PATH
+      - name: Configure Git
+        shell: bash
+        run: |
+          git config --global user.name "$GITHUB_ACTOR"
+          git config --global user.email "$GITHUB_ACTOR@users.noreply.github.com"          
       - name: Get the version
         id: get_version
         run: |
