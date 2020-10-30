@@ -160,4 +160,26 @@ jobs:
           draft: false
           prerelease: false
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}        
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  
+  release-operatorhub:
+    name: Relase to OperatorHub via community-operators
+    runs-on: ubuntu-latest
+    if: "startsWith(github.ref, 'refs/tags')"
+    needs: ["build"]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Get the version
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
+      - name: checkout community-operators
+        uses: actions/checkout@v2
+        with:
+          repository: https://github.com/operator-framework/community-operators
+          path: ./tmp/community-operators
+      - name: PR to community operators
+        shell: bash
+        run: make operator-hub-pr VERSION=${VERSION} COMMUNITY_OPERATORS_DIR=./tmp/community-operators COMMUNITY_FORK=${{ github.actor }}
+     
+

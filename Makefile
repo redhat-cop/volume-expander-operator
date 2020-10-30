@@ -79,6 +79,19 @@ helmchart-repo-push: helmchart-repo
 	git -C ${HELM_REPO_DEST} commit -m "Release ${VERSION}"
 	git -C ${HELM_REPO_DEST} push origin "gh-pages"
 
+operator-hub-pr: bundle
+	git -C ${COMMUNITY_OPERATORS_DIR} checkout -b volume-expander-operator-${VERSION}
+	export new_version=$([[ -d "${COMMUNITY_OPERATORS_DIR}/community-operators/volume-expander-operator" ]] && "true")
+	git -C ${COMMUNITY_OPERATORS_DIR} remote add ${COMMUNITY_FORK} https://github.com/${COMMUNITY_FORK}/community-operators
+	mkdir -p ${COMMUNITY_OPERATORS_DIR}/community-operators/volume-expander-operator/${VERSION}
+	cp -R ./bundle/* ${COMMUNITY_OPERATORS_DIR}/community-operators/volume-expander-operator/${VERSION}
+	cp bundle.Dockerfile ${COMMUNITY_OPERATORS_DIR}/community-operators/volume-expander-operator/${VERSION}/Dockerfile
+	git -C ${COMMUNITY_OPERATORS_DIR} add .
+	git -C ${COMMUNITY_OPERATORS_DIR} commit -m "volume-expander-operator release ${VERSION}" -s
+	git -C ${COMMUNITY_OPERATORS_DIR} push ${COMMUNITY_FORK} -f 
+	hub -C ${COMMUNITY_OPERATORS_DIR} pull-request -F $([[ $new_version ]] && "./config/pr-message-initial-commit.md" || ./config/pr-message-new-version.md )
+
+
 # Run go fmt against code
 fmt:
 	go fmt ./...
