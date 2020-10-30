@@ -215,7 +215,7 @@ jobs:
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
-        if: ${{ enf.first_release }} == "true"
+        if: ${{ env.first_release }} == "true"
         with:
           path: ./tmp/community-operators
           commit-message: volume-expander-operator release ${{ env.VERSION }}
@@ -279,7 +279,7 @@ jobs:
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
-        if: ${{ enf.first_release }} != "true"
+        if: ${{ env.first_release }} != "true"
         with:
           path: ./tmp/community-operators
           commit-message: volume-expander-operator release ${{ env.VERSION }}
