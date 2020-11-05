@@ -3,9 +3,9 @@ entries:
   volume-expander-operator:
   - apiVersion: v1
     appVersion: v0.1.0
-    created: "2020-11-04T13:11:26.545453165Z"
+    created: "2020-11-05T01:14:56.019355754Z"
     description: Helm chart that deploys volume-expander-operator
-    digest: b1698b8707beb962f21574b8f32269fb60d8e27388fa7d6bb91b745dbbae1ca2
+    digest: 04e2f203a3140068dae6b80a5fba248517c17fcc1d9672dd5023604d420ac207
     keywords:
     - volume
     - storage
@@ -18,4 +18,4 @@ entries:
     urls:
     - https://raffaelespazzoli.github.io/volume-expander-operator/volume-expander-operator/volume-expander-operator-v0.1.0.tgz
     version: v0.1.0
-generated: "2020-11-04T13:11:26.545071564Z"
+generated: "2020-11-05T01:14:56.018924854Z"
