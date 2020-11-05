@@ -17,7 +17,8 @@ metadata:
   namespace: placeholder
 spec:
   apiservicedefinitions: {}
-  customresourcedefinitions: {}
+  customresourcedefinitions: 
+    owned: []
   description: |
     The purpose of the volume-expander-operator is to expand volumes when they are running out of space.
     This is achieved by using the [volume expansion feature](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#expanding-persistent-volumes-claims).
