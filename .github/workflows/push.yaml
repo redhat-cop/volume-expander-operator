@@ -53,7 +53,7 @@ jobs:
       
     - name: build bundle
       shell: bash 
-      run: make bundle IMG=quay.io/${{ github.actor }}/$(basename $GITHUB_REPOSITORY):${OPERATOR_IMAGE_TAG} VERSION=${BUNDLE_VERSION}
+      run: make bundle IMG=quay.io/${{ github.actor }}/$(basename $GITHUB_REPOSITORY):${OPERATOR_IMAGE_TAG} VERSION=${BUNDLE_VERSION} DEFAULT_CHANNEL=alpha
 
     - name: verify bundle
       shell: bash
@@ -205,7 +205,7 @@ jobs:
       - name: copy bundle to community operators
         shell: bash
         run: | 
-          make bundle IMG=quay.io/${{ github.actor }}/$(basename $GITHUB_REPOSITORY):v${VERSION} VERSION=${VERSION}
+          make bundle IMG=quay.io/${{ github.actor }}/$(basename $GITHUB_REPOSITORY):v${VERSION} VERSION=${VERSION} DEFAULT_CHANNEL=alpha
           mkdir -p ./tmp/community-operators/community-operators/volume-expander-operator/${VERSION}
           /bin/cp -v -R ./bundle/* ./tmp/community-operators/community-operators/volume-expander-operator/${VERSION}         
 
