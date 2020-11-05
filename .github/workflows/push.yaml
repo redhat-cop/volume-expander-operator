@@ -207,7 +207,7 @@ jobs:
         run: | 
           make bundle IMG=quay.io/${{ github.actor }}/$(basename $GITHUB_REPOSITORY):v${VERSION} VERSION=${VERSION}
           mkdir -p ./tmp/community-operators/community-operators/volume-expander-operator/${VERSION}
-          cp -Rf ./bundle/* ./tmp/community-operators/community-operators/volume-expander-operator/${VERSION}         
+          cp -v -Rf ./bundle/* ./tmp/community-operators/community-operators/volume-expander-operator/${VERSION}         
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
