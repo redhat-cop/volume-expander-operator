@@ -53,7 +53,7 @@ jobs:
       
     - name: build bundle
       shell: bash 
-      run: make bundle IMG=quay.io/${{ github.actor }}/$(basename $GITHUB_REPOSITORY):${OPERATOR_IMAGE_TAG} VERSION=${BUNDLE_VERSION} DEFAULT_CHANNEL=alpha
+      run: make bundle IMG=quay.io/${{ github.repository_owner }}/$(basename $GITHUB_REPOSITORY):${OPERATOR_IMAGE_TAG} VERSION=${BUNDLE_VERSION} DEFAULT_CHANNEL=alpha
 
     - name: verify bundle
       shell: bash
@@ -61,7 +61,7 @@ jobs:
 
     - name: build chart
       shell: bash
-      run: make helmchart VERSION=${BUNDLE_VERSION} IMG=quay.io/${{ github.actor }}/$(basename $GITHUB_REPOSITORY):${OPERATOR_IMAGE_TAG}      
+      run: make helmchart VERSION=${BUNDLE_VERSION} IMG=quay.io/${{ github.repository_owner }}/$(basename $GITHUB_REPOSITORY):${OPERATOR_IMAGE_TAG}      
 
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v1
@@ -72,7 +72,7 @@ jobs:
     - name: Login to DockerHub
       uses: docker/login-action@v1 
       with:
-        registry: quay.io/${{ github.actor }}
+        registry: quay.io/${{ github.repository_owner }}
         username: ${{ secrets.QUAY_USERNAME }}
         password: ${{ secrets.QUAY_PASSWORD }}      
 
@@ -82,7 +82,7 @@ jobs:
         context: .
         file: ./Dockerfile
         push: true
-        tags: "quay.io/${{ github.actor }}/volume-expander-operator:${{ env.OPERATOR_IMAGE_TAG }}"
+        tags: "quay.io/${{ github.repository_owner }}/volume-expander-operator:${{ env.OPERATOR_IMAGE_TAG }}"
 
     - name: "Build and Push Bundle Image"
       uses: docker/build-push-action@v2
@@ -90,11 +90,11 @@ jobs:
         context: .
         file: ./bundle.Dockerfile
         push: true
-        tags: "quay.io/${{ github.actor }}/volume-expander-operator-controller-bundle:${{ env.BUNDLE_IMAGE_TAG }}" 
+        tags: "quay.io/${{ github.repository_owner }}/volume-expander-operator-controller-bundle:${{ env.BUNDLE_IMAGE_TAG }}" 
 
     - name: "Verify bundle image"
       shell: bash
-      run: operator-sdk bundle validate quay.io/${{ github.actor }}/$(basename $GITHUB_REPOSITORY)-controller-bundle:${BUNDLE_IMAGE_TAG} --select-optional name=operatorhub    
+      run: operator-sdk bundle validate quay.io/${{ github.repository_owner }}/$(basename $GITHUB_REPOSITORY)-controller-bundle:${BUNDLE_IMAGE_TAG} --select-optional name=operatorhub    
       
   release-helm-chart:
     name: Helm Chart Release      
@@ -123,11 +123,11 @@ jobs:
 
       - name: Build helm chart repo
         shell: bash
-        run: make helmchart-repo VERSION=${VERSION} IMG=quay.io/${{ github.actor }}/$(basename $GITHUB_REPOSITORY):${version} CHART_REPO_URL=https://${{ github.actor }}.github.io/$(basename $GITHUB_REPOSITORY) HELM_REPO_DEST=./tmp/gh-pages
+        run: make helmchart-repo VERSION=${VERSION} IMG=quay.io/${{ github.repository_owner }}/$(basename $GITHUB_REPOSITORY):${version} CHART_REPO_URL=https://${{ github.repository_owner }}.github.io/$(basename $GITHUB_REPOSITORY) HELM_REPO_DEST=./tmp/gh-pages
       
       - name: push helm repo to gh-pages
         shell: bash
-        run: make helmchart-repo-push VERSION=${VERSION} IMG=quay.io/${{ github.actor }}/$(basename $GITHUB_REPOSITORY):${version} CHART_REPO_URL=https://${{ github.actor }}.github.io/$(basename $GITHUB_REPOSITORY) HELM_REPO_DEST=./tmp/gh-pages
+        run: make helmchart-repo-push VERSION=${VERSION} IMG=quay.io/${{ github.repository_owner }}/$(basename $GITHUB_REPOSITORY):${version} CHART_REPO_URL=https://${{ github.repository_owner }}.github.io/$(basename $GITHUB_REPOSITORY) HELM_REPO_DEST=./tmp/gh-pages
 
   release-github:
     name: GitHub Release
@@ -205,7 +205,7 @@ jobs:
       - name: copy bundle to community operators
         shell: bash
         run: | 
-          make bundle IMG=quay.io/${{ github.actor }}/$(basename $GITHUB_REPOSITORY):v${VERSION} VERSION=${VERSION} DEFAULT_CHANNEL=alpha
+          make bundle IMG=quay.io/${{ github.repository_owner }}/$(basename $GITHUB_REPOSITORY):v${VERSION} VERSION=${VERSION} DEFAULT_CHANNEL=alpha
           mkdir -p ./tmp/community-operators/community-operators/volume-expander-operator/${VERSION}
           /bin/cp -v -R ./bundle/* ./tmp/community-operators/community-operators/volume-expander-operator/${VERSION}         
 
@@ -220,7 +220,7 @@ jobs:
           signoff: true
           branch: volume-expander-operator-${{ env.VERSION }}
           delete-branch: true
-          push-to-fork: ${{ github.actor }}/community-operators
+          push-to-fork: ${{ github.repository_owner }}/community-operators
           title: volume-expander-operator initial commit
           body: |
             ### New Submissions
@@ -280,11 +280,11 @@ jobs:
           path: ./tmp/community-operators
           commit-message: volume-expander-operator release ${{ env.VERSION }}
           committer: ${{ github.actor }} <raffaele.spazzoli@gmail.com>
-          author: Raffaele Spazzol <raffaele.spazzoli@gmail.com>
+          author: ${{ github.actor }} <raffaele.spazzoli@gmail.com>
           signoff: true
           branch: volume-expander-operator-${{ env.VERSION }}
           delete-branch: true
-          push-to-fork: ${{ github.actor }}/community-operators
+          push-to-fork: ${{ github.repository_owner }}/community-operators
           title: volume-expander-operator new version ${{ env.VERSION }}
           body: |
             ### New Submissions
