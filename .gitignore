@@ -22,6 +22,8 @@ bin
 *.swp
 *.swo
 *~
-bundle
+bundle/manifests
+bundle/metadata
+bundle/test
 charts
 maybash.sh
