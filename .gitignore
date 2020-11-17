@@ -22,8 +22,7 @@ bin
 *.swp
 *.swo
 *~
-bundle/manifests
-bundle/metadata
-bundle/tests
+bundle
+bundle.Dockerfile
 charts
 maybash.sh
