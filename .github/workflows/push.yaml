@@ -87,7 +87,7 @@ jobs:
         context: .
         file: ./Dockerfile
         push: true
-        tags: "quay.io/${{ github.repository_owner }}/{{ env.REPOSITORY_NAME }}:${{ env.OPERATOR_IMAGE_TAG }}"
+        tags: "quay.io/${{ github.repository_owner }}/${{ env.REPOSITORY_NAME }}:${{ env.OPERATOR_IMAGE_TAG }}"
 
     - name: "Build and Push Bundle Image"
       uses: docker/build-push-action@v2
@@ -95,7 +95,7 @@ jobs:
         context: .
         file: ./bundle.Dockerfile
         push: true
-        tags: "quay.io/${{ github.repository_owner }}/{{ env.REPOSITORY_NAME }}-controller-bundle:${{ env.BUNDLE_IMAGE_TAG }}" 
+        tags: "quay.io/${{ github.repository_owner }}/${{ env.REPOSITORY_NAME }}-controller-bundle:${{ env.BUNDLE_IMAGE_TAG }}" 
 
     - name: "Verify bundle image"
       shell: bash
@@ -238,14 +238,14 @@ jobs:
         if: ${{ startsWith( env.first_release, 'true' ) }}
         with:
           path: ./tmp/community-operators
-          commit-message: "{{ env.REPOSITORY_NAME }} release ${{ env.VERSION }}"
+          commit-message: ${{ env.REPOSITORY_NAME }} release ${{ env.VERSION }}
           committer: ${{ github.actor }} <raffaele.spazzoli@gmail.com>
           author: ${{ github.actor }} <raffaele.spazzoli@gmail.com>
           signoff: true
-          branch: "{{ env.REPOSITORY_NAME }}-${{ env.VERSION }}"
+          branch: ${{ env.REPOSITORY_NAME }}-${{ env.VERSION }}
           delete-branch: true
           push-to-fork: ${{ github.repository_owner }}/community-operators
-          title: "{{ env.REPOSITORY_NAME }} initial commit"
+          title: ${{ env.REPOSITORY_NAME }} initial commit
           body: |
             ### New Submissions
 
@@ -302,14 +302,14 @@ jobs:
         if: ${{ ! startsWith( env.first_release, 'true' ) }} 
         with:
           path: ./tmp/community-operators
-          commit-message: "{{ env.REPOSITORY_NAME }} release ${{ env.VERSION }}"
+          commit-message: ${{ env.REPOSITORY_NAME }} release ${{ env.VERSION }}
           committer: ${{ github.actor }} <raffaele.spazzoli@gmail.com>
           author: ${{ github.actor }} <raffaele.spazzoli@gmail.com>
           signoff: true
-          branch: "{{ env.REPOSITORY_NAME }}-${{ env.VERSION }}"
+          branch: ${{ env.REPOSITORY_NAME }}-${{ env.VERSION }}
           delete-branch: true
           push-to-fork: ${{ github.repository_owner }}/community-operators
-          title: "{{ env.REPOSITORY_NAME }} new version ${{ env.VERSION }}"
+          title: ${{ env.REPOSITORY_NAME }} new version ${{ env.VERSION }}
           body: |
             ### New Submissions
 
