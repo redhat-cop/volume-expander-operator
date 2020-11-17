@@ -24,6 +24,6 @@ bin
 *~
 bundle/manifests
 bundle/metadata
-bundle/test
+bundle/tests
 charts
 maybash.sh

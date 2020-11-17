@@ -6,6 +6,11 @@ jobs:
     name: build
     steps:
 
+    - name: set repo name
+      shell: bash
+      run: | 
+        echo "REPOSITORY_NAME=$(basename $GITHUB_REPOSITORY)" >> $GITHUB_ENV    
+
     - name: Set up Go 1.x
       uses: actions/setup-go@v2
       with:
@@ -30,7 +35,7 @@ jobs:
       
     - name: build bundle
       shell: bash
-      run: make bundle IMG=quay.io/${GITHUB_ACTOR}/volume-expander-operator:0.0.1 VERSION=0.0.1 DEFAULT_CHANNEL=alpha
+      run: make bundle IMG=quay.io/${{ github.repository_owner }}/$(basename $GITHUB_REPOSITORY):0.0.1 VERSION=0.0.1 DEFAULT_CHANNEL=alpha
 
     - name: verify bundle
       shell: bash
@@ -38,4 +43,4 @@ jobs:
 
     - name: build chart
       shell: bash
-      run: make helmchart VERSION=latest IMG=quay.io/${{ github.owner }}/$(basename $GITHUB_REPOSITORY):latest         
+      run: make helmchart VERSION=latest IMG=quay.io/${{ github.repository_owner }}/$(basename $GITHUB_REPOSITORY):latest
