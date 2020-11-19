@@ -58,7 +58,9 @@ jobs:
       
     - name: build bundle
       shell: bash 
-      run: make bundle IMG=quay.io/${{ github.repository_owner }}/$(basename $GITHUB_REPOSITORY):${OPERATOR_IMAGE_TAG} VERSION=${BUNDLE_VERSION} DEFAULT_CHANNEL=alpha
+      run: |
+        make bundle IMG=quay.io/${{ github.repository_owner }}/$(basename $GITHUB_REPOSITORY):${OPERATOR_IMAGE_TAG} VERSION=${BUNDLE_VERSION} DEFAULT_CHANNEL=alpha
+        sed  's/bundle\///g' bundle.Dockerfile > bundle/Dockerfile
 
     - name: verify bundle
       shell: bash
