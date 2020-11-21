@@ -35,7 +35,7 @@ oc login --token ${token}
 make run ENABLE_WEBHOOKS=false PROMETHEUS_URL=${prometheus_route} TOKEN=${token}
 ```
 
-## Building/Pushing an image
+## Building/Pushing the operator image
 
 ```shell
 export repo=raffaelespazzoli #replace with yours
@@ -57,7 +57,7 @@ operator-sdk cleanup volume-expander-operator -n volume-expander-operator
 operator-sdk run bundle --install-mode AllNamespaces -n volume-expander-operator quay.io/$repo/volume-expander-operator-controller-bundle:latest
 ```
 
-Troubleshooting:
+### Cleaning up
 
 ```shell
 operator-sdk cleanup volume-expander-operator -n volume-expander-operator
