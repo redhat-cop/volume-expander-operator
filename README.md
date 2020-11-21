@@ -25,9 +25,13 @@ This operator was tested with [OCS](https://www.redhat.com/en/technologies/cloud
 ## Running the operator locally
 
 ```shell
-export token=$(oc whoami -t)
+oc new-project volume-expander-operator-local
+oc apply -f config/rbac/role.yaml -n volume-expander-operator-local
+oc apply -f config/rbac/role_binding.yaml -n volume-expander-operator-local
+export token=export token=$(oc serviceaccounts get-token 'default' -n volume-expander-operator-local)
 export base_domain=$(oc get dns cluster -o jsonpath='{.spec.baseDomain}')
 export prometheus_route=https://prometheus-k8s-openshift-monitoring.apps.${base_domain}
+oc login --token ${token}
 make run ENABLE_WEBHOOKS=false PROMETHEUS_URL=${prometheus_route} TOKEN=${token}
 ```
 
@@ -53,7 +57,7 @@ operator-sdk cleanup volume-expander-operator -n volume-expander-operator
 operator-sdk run bundle --install-mode AllNamespaces -n volume-expander-operator quay.io/$repo/volume-expander-operator-controller-bundle:latest
 ```
 
-Troublkeshooting:
+Troubleshooting:
 
 ```shell
 operator-sdk cleanup volume-expander-operator -n volume-expander-operator
@@ -61,16 +65,10 @@ oc delete operatorgroup operator-sdk-og
 oc delete catalogsource volume-expander-operator-catalog
 ```
 
-Failing:
+## Manual tests
 
 ```shell
-operator-sdk olm status --olm-namespace openshift-operator-lifecycle-manager
-operator-sdk run bundle --install-mode AllNamespaces quay.io/$repo/volume-expander-operator-controller-bundle:latest
+oc new-project volume-expander-operator-test
+oc apply -f ./test/volume.yaml -n volume-expander-operator-test
+oc apply -f ./test/deployment.yaml -n volume-expander-operator-test
 ```
-
-
-Warning:
-INFO[0001] Could not find optional dependencies file     bundle-dir=/tmp/bundle-627015911 container-tool=docker
-
-
-opm index extract

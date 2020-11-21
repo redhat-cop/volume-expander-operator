@@ -1,0 +1,35 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: expander-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: volume-leaker
+  template:
+    metadata:
+      name: volume-leaker
+      labels:
+        component: volume-leaker
+    spec:
+      volumes:
+        - name: volume
+          persistentVolumeClaim:
+            claimName: to-be-expanded
+      containers:
+        - resources: {}
+          name: volume-leaker
+          command:
+            - /bin/bash
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: volume
+              mountPath: /mount
+          image: 'ubi8:latest'
+          args:
+            - '-c'
+            - yes ciao >> /mount/ciao.txt
+
+
+
