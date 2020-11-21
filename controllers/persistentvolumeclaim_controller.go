@@ -53,7 +53,7 @@ const defaultExtendByPercent = 25
 const extendThresholdPercentAnnotation = "volume-expander-operator.redhat-cop.io/expand-threshold-percent"
 const defaultExtendThresholdPercent = 80
 
-const defaultPrometheusAddress = "https://prometheus-k8s.openshift-monitoring.svc:9092"
+const defaultPrometheusAddress = "https://prometheus-k8s.openshift-monitoring.svc:9091"
 const tokenFile = "/var/run/secrets/kubernetes.io/serviceaccount/token"
 
 const tokenEnvironmentVariable = "TOKEN"
@@ -72,6 +72,7 @@ type PersistentVolumeClaimReconciler struct {
 // +kubebuilder:rbac:groups=core,resources=persistentvolumeclaims,verbs=get;list;watch;update;patch
 // +kubebuilder:rbac:groups=core,resources=persistentvolumeclaims/status,verbs=get
 // +kubebuilder:rbac:groups=core,resources=pods,verbs=get;list;watch;delete
+// +kubebuilder:rbac:groups=core,resources=namespaces,verbs=get
 
 func (r *PersistentVolumeClaimReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	_ = context.Background()
