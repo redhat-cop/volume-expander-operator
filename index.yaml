@@ -3,9 +3,9 @@ entries:
   volume-expander-operator:
   - apiVersion: v1
     appVersion: v0.1.3
-    created: "2020-12-05T16:10:46.686066839Z"
+    created: "2020-12-05T16:29:58.750296624Z"
     description: Helm chart that deploys volume-expander-operator
-    digest: 3cf21f21152d85b2840dab11dc7b579d61034f117690abcd6e43b8d845861b31
+    digest: 8e32ad63b459d58cb4860cfea8988f044229a06e9d6001bb6d33a0fe7d7c94dc
     keywords:
     - volume
     - storage
@@ -20,7 +20,7 @@ entries:
     version: v0.1.3
   - apiVersion: v1
     appVersion: v0.1.2
-    created: "2020-12-05T16:10:46.685832835Z"
+    created: "2020-12-05T16:29:58.750055922Z"
     description: Helm chart that deploys volume-expander-operator
     digest: c41815bb8d60308e8f75e622ea4d3c1caeabed42e60c8815956986707b3a553e
     keywords:
@@ -37,7 +37,7 @@ entries:
     version: v0.1.2
   - apiVersion: v1
     appVersion: v0.1.1
-    created: "2020-12-05T16:10:46.685589531Z"
+    created: "2020-12-05T16:29:58.749869321Z"
     description: Helm chart that deploys volume-expander-operator
     digest: 31c3a3312806625bd189352f176eb55a009e7971383fbca0cfafc6e4afbf2c1e
     keywords:
@@ -54,7 +54,7 @@ entries:
     version: v0.1.1
   - apiVersion: v1
     appVersion: v0.1.0
-    created: "2020-12-05T16:10:46.685338528Z"
+    created: "2020-12-05T16:29:58.74967722Z"
     description: Helm chart that deploys volume-expander-operator
     digest: abd156a660690bc79f83957f4bec29e65dfc77d1a8ccbc1bf4bcbb02f52b8474
     keywords:
@@ -69,4 +69,4 @@ entries:
     urls:
     - https://redhat-cop.github.io/volume-expander-operator/volume-expander-operator/volume-expander-operator-v0.1.0.tgz
     version: v0.1.0
-generated: "2020-12-05T16:10:46.684748219Z"
+generated: "2020-12-05T16:29:58.749291217Z"
