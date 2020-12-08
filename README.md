@@ -48,9 +48,8 @@ oc new-project volume-expander-operator
 
 If you'd like to launch this operator from the command line, you can use the manifests contained in this repository by running the following:
 
-oc new-project namespace-configuration-operator
-
 ```shell
+oc new-project namespace-configuration-operator
 oc apply -f config/operatorhub -n volume-expander-operator
 ```
 
