@@ -174,6 +174,10 @@ func filterPods(reconcileContext *reconcileContext, pods []corev1.Pod) []corev1.
 	result := []corev1.Pod{}
 	for _, pod := range pods {
 		for _, volume := range pod.Spec.Volumes {
+			if volume.PersistentVolumeClaim == nil {
+				continue
+			}
+
 			if volume.PersistentVolumeClaim.ClaimName == reconcileContext.instance.Name {
 				if pod.Status.Phase == corev1.PodRunning || pod.Status.Phase == corev1.PodPending {
 					result = append(result, pod)
