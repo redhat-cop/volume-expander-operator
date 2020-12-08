@@ -68,6 +68,16 @@ helmchart: kustomize
 	version=${VERSION} envsubst < ./config/helmchart/Chart.yaml.tpl  > ./charts/volume-expander-operator/Chart.yaml
 	helm lint ./charts/volume-expander-operator
 
+# Generate helm chart
+helmchart2: kustomize
+	mkdir -p ./charts/volume-expander-operator/templates
+	cp ./config/helmchart/templates/* ./charts/volume-expander-operator/templates
+	$(KUSTOMIZE) build ./config/helmchart | sed 's/release-namespace/{{.Release.namespace}}/' > ./charts/volume-expander-operator/templates/rbac.yaml
+	version=${VERSION} envsubst < ./config/helmchart/Chart.yaml.tpl  > ./charts/volume-expander-operator/Chart.yaml
+	export image=${IMG%:*}
+	version=${VERSION} image_repo=$${IMG%:*} envsubst < ./config/helmchart/values.yaml.tpl  > ./charts/volume-expander-operator/values.yaml
+	helm lint ./charts/volume-expander-operator	
+
 helmchart-repo: helmchart
 	mkdir -p ${HELM_REPO_DEST}/volume-expander-operator
 	helm package -d ${HELM_REPO_DEST}/volume-expander-operator ./charts/volume-expander-operator
