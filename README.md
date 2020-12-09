@@ -48,7 +48,7 @@ oc new-project volume-expander-operator
 
 If you'd like to launch this operator from the command line, you can use the manifests contained in this repository by running the following:
 
-oc new-project namespace-configuration-operator
+oc new-project volume-expander-operator
 
 ```shell
 oc apply -f config/operatorhub -n volume-expander-operator
@@ -109,6 +109,27 @@ operator-sdk bundle validate quay.io/$repo/volume-expander-operator-controller-b
 oc new-project volume-expander-operator
 operator-sdk cleanup volume-expander-operator -n volume-expander-operator
 operator-sdk run bundle --install-mode AllNamespaces -n volume-expander-operator quay.io/$repo/volume-expander-operator-controller-bundle:latest
+```
+
+## Releasing
+
+```shell
+git tag -a "<tagname>" -m "<commit message>"
+git push upstream <tagname>
+```
+
+If you need to remove a release:
+
+```shell
+git tag -d <tagname>
+git push upstream --delete <tagname>
+```
+
+If you need to "move" a release to the current main
+
+```shell
+git tag -f <tagname>
+git push upstream -f <tagname>
 ```
 
 ### Cleaning up
