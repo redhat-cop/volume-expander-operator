@@ -3,6 +3,10 @@ apiVersion: v1
 metadata:
   annotations:
     volume-expander-operator.redhat-cop.io/autoexpand: 'true'
+    volume-expander-operator.redhat-cop.io/expand-threshold-percent: "85"
+    volume-expander-operator.redhat-cop.io/expand-by-percent: "20"
+    volume-expander-operator.redhat-cop.io/polling-frequency: "1m"
+    volume-expander-operator.redhat-cop.io/expand-up-to: "20Gi"
   name: to-be-expanded
 spec:
   accessModes:

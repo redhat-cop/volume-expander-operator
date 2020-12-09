@@ -63,10 +63,11 @@ manifests: controller-gen
 # Generate helm chart
 helmchart: kustomize
 	mkdir -p ./charts/volume-expander-operator/templates
-	cd config/manager && $(KUSTOMIZE) edit set image controller=$(IMG)
-	$(KUSTOMIZE) build ./config/default > ./charts/volume-expander-operator/templates/manifest.yaml
+	cp ./config/helmchart/templates/* ./charts/volume-expander-operator/templates
+	$(KUSTOMIZE) build ./config/helmchart | sed 's/release-namespace/{{.Release.namespace}}/' > ./charts/volume-expander-operator/templates/rbac.yaml
 	version=${VERSION} envsubst < ./config/helmchart/Chart.yaml.tpl  > ./charts/volume-expander-operator/Chart.yaml
-	helm lint ./charts/volume-expander-operator
+	version=${VERSION} image_repo=$${IMG%:*} envsubst < ./config/helmchart/values.yaml.tpl  > ./charts/volume-expander-operator/values.yaml
+	helm lint ./charts/volume-expander-operator	
 
 helmchart-repo: helmchart
 	mkdir -p ${HELM_REPO_DEST}/volume-expander-operator
