@@ -30,10 +30,10 @@ jobs:
       env:
         RELEASE_VERSION: v1.3.0
       run: | 
-        curl -LO https://github.com/operator-framework/operator-sdk/releases/download/${RELEASE_VERSION}/operator-sdk-${RELEASE_VERSION}-x86_64-linux-gnu
-        chmod +x operator-sdk-${RELEASE_VERSION}-x86_64-linux-gnu
+        curl -LO https://github.com/operator-framework/operator-sdk/releases/download/${RELEASE_VERSION}/operator-sdk_linux_amd64
+        chmod +x operator-sdk_linux_amd64
         mkdir ${HOME}/bin
-        mv operator-sdk-${RELEASE_VERSION}-x86_64-linux-gnu ${HOME}/bin/operator-sdk
+        mv operator-sdk_linux_amd64 ${HOME}/bin/operator-sdk
         echo "${HOME}/bin" >> $GITHUB_PATH
 
     - name: Get the version for tags
@@ -56,8 +56,8 @@ jobs:
       shell: bash 
       run: |
         echo "OPERATOR_IMAGE_TAG=latest" >> $GITHUB_ENV
-        echo "BUNDLE_IMAGE_TAG=v0.0.0" >> $GITHUB_ENV
-        echo "BUNDLE_VERSION=0.0.0" >> $GITHUB_ENV 
+        echo "BUNDLE_IMAGE_TAG=v0.0.1" >> $GITHUB_ENV
+        echo "BUNDLE_VERSION=0.0.1" >> $GITHUB_ENV 
 
     - name: build code
       run:  make
@@ -103,11 +103,11 @@ jobs:
         context: .
         file: ./bundle.Dockerfile
         push: true
-        tags: "quay.io/${{ github.repository_owner }}/${{ env.REPOSITORY_NAME }}-controller-bundle:${{ env.BUNDLE_IMAGE_TAG }}" 
+        tags: "quay.io/${{ github.repository_owner }}/${{ env.REPOSITORY_NAME }}-bundle:${{ env.BUNDLE_IMAGE_TAG }}" 
 
     - name: "Verify bundle image"
       shell: bash
-      run: operator-sdk bundle validate quay.io/${{ github.repository_owner }}/$(basename $GITHUB_REPOSITORY)-controller-bundle:${BUNDLE_IMAGE_TAG} --select-optional name=operatorhub    
+      run: operator-sdk bundle validate quay.io/${{ github.repository_owner }}/$(basename $GITHUB_REPOSITORY)-bundle:${BUNDLE_IMAGE_TAG} --select-optional name=operatorhub    
       
   release-helm-chart:
     name: Helm Chart Release      
@@ -188,7 +188,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
   release-operatorhub:
-    name: Relase to OperatorHub via community-operators
+    name: Relase to OperatorHub via community-operators (We don't actually commit in this case)
     runs-on: ubuntu-latest
     if: "startsWith(github.ref, 'refs/tags')"
     needs: ["build"]
@@ -204,17 +204,17 @@ jobs:
       - name: Set up Go 1.x
         uses: actions/setup-go@v2
         with:
-          go-version: ^1.15
+          go-version: ^1.14
       - name: Download operator sdk
         shell: bash
         env:
           RELEASE_VERSION: v1.3.0
         run: | 
-          curl -LO https://github.com/operator-framework/operator-sdk/releases/download/${RELEASE_VERSION}/operator-sdk-${RELEASE_VERSION}-x86_64-linux-gnu
-          chmod +x operator-sdk-${RELEASE_VERSION}-x86_64-linux-gnu
+          curl -LO https://github.com/operator-framework/operator-sdk/releases/download/${RELEASE_VERSION}/operator-sdk_linux_amd64
+          chmod +x operator-sdk_linux_amd64
           mkdir ${HOME}/bin
-          mv operator-sdk-${RELEASE_VERSION}-x86_64-linux-gnu ${HOME}/bin/operator-sdk
-          echo "${HOME}/bin" >> $GITHUB_PATH 
+          mv operator-sdk_linux_amd64 ${HOME}/bin/operator-sdk
+          echo "${HOME}/bin" >> $GITHUB_PATH
       - name: Get the version
         id: get_version
         run: |
@@ -229,7 +229,7 @@ jobs:
       - name: check whether it is first release
         shell: bash
         run: |
-          echo first_release=$([[ ! -d "./tmp/community-operators/community-operators/volume-expander-operator" ]] && echo 'true' || echo 'false') >> $GITHUB_ENV
+          echo first_release=$([[ ! -d "./tmp/community-operators/community-operators/$(basename $GITHUB_REPOSITORY)" ]] && echo 'true' || echo 'false') >> $GITHUB_ENV
           echo $first_release
 
       
