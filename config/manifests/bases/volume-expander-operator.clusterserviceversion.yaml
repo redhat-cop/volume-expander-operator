@@ -6,12 +6,12 @@ metadata:
     capabilities: Basic Install
     categories: Storage,Monitoring
     certified: "false"
-    containerImage: quay.io/redhat-cop/volume-expansion-operator:v0.1.0
+    containerImage: quay.io/redhat-cop/volume-expander-operator
     createdAt: 10/14/2020
     description: This operator provides automation expanding pod's volumes when they are about to run out of space.
     operators.operatorframework.io/builder: operator-sdk-v1.1.0
     operators.operatorframework.io/project_layout: go.kubebuilder.io/v2
-    repository: https://github.com/redhat-cop/volume-expansion-operator
+    repository: https://github.com/redhat-cop/volume-expander-operator
     support: Best Effort
   name: volume-expander-operator.v0.1.0
   namespace: placeholder
