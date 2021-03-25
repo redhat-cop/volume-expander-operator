@@ -80,8 +80,7 @@ helm upgrade volume-expander-operator volume-expander-operator/volume-expander-o
 
 ```shell
 oc new-project volume-expander-operator-local
-oc apply -f config/rbac/role.yaml -n volume-expander-operator-local
-oc apply -f config/rbac/role_binding.yaml -n volume-expander-operator-local
+kustomize build ./config/local-development | oc apply -f - -n volume-expander-operator-local
 export token=export token=$(oc serviceaccounts get-token 'default' -n volume-expander-operator-local)
 export base_domain=$(oc get dns cluster -o jsonpath='{.spec.baseDomain}')
 export prometheus_route=https://prometheus-k8s-openshift-monitoring.apps.${base_domain}
