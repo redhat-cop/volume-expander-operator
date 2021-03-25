@@ -50,14 +50,3 @@ Selector labels
 app.kubernetes.io/name: {{ include "volume-expander-operator.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
-
-{{/*
-Create the name of the service account to use
-*/}}
-{{- define "volume-expander-operator.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
-{{- default (include "volume-expander-operator.fullname" .) .Values.serviceAccount.name }}
-{{- else }}
-{{- default "default" .Values.serviceAccount.name }}
-{{- end }}
-{{- end }}
