@@ -89,6 +89,28 @@ oc login --token ${token}
 make run ENABLE_WEBHOOKS=false PROMETHEUS_URL=${prometheus_route} TOKEN=${token}
 ```
 
+### Test helm chart locally
+
+Define an image and tag. For example...
+
+```shell
+export imageRepository="quay.io/redhat-cop/volume-expander-operator"
+export imageTag="v0.1.6"
+```
+
+Deploy chart...
+
+```shell
+make helmchart IMG=${imageRepository} VERSION=${imageTag}
+helm upgrade -i volume-expander-operator-local charts/volume-expander-operator -n volume-expander-operator-local --create-namespace
+```
+
+Delete...
+
+```shell
+helm delete volume-expander-operator-local -n volume-expander-operator-local
+```
+
 ## Building/Pushing the operator image
 
 ```shell
