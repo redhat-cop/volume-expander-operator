@@ -961,7 +961,7 @@ func (h *apiClientImpl) URL(ep string, args map[string]string) *url.URL {
 }
 
 func (h *apiClientImpl) Do(ctx context.Context, req *http.Request) (*http.Response, []byte, Warnings, error) {
-	resp, body, _, err := h.client.Do(ctx, req)
+	resp, body, err := h.client.Do(ctx, req)
 	if err != nil {
 		return resp, body, nil, err
 	}

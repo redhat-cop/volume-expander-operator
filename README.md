@@ -81,7 +81,7 @@ helm upgrade volume-expander-operator volume-expander-operator/volume-expander-o
 ```shell
 oc new-project volume-expander-operator-local
 kustomize build ./config/local-development | oc apply -f - -n volume-expander-operator-local
-export token=export token=$(oc serviceaccounts get-token 'default' -n volume-expander-operator-local)
+export token=export token=$(oc serviceaccounts get-token 'volume-expander-operator-manager' -n volume-expander-operator-local)
 export base_domain=$(oc get dns cluster -o jsonpath='{.spec.baseDomain}')
 export prometheus_route=https://prometheus-k8s-openshift-monitoring.apps.${base_domain}
 oc login --token ${token}
@@ -94,7 +94,7 @@ Define an image and tag. For example...
 
 ```shell
 export imageRepository="quay.io/redhat-cop/volume-expander-operator"
-export imageTag="v0.1.6"
+export imageTag="$(git describe --tags --abbrev=0)" # grabs the most recent git tag, which should match the image tag
 ```
 
 Deploy chart...

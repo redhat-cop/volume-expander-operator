@@ -74,8 +74,7 @@ type PersistentVolumeClaimReconciler struct {
 // +kubebuilder:rbac:groups=core,resources=pods,verbs=get;list;watch;delete
 // +kubebuilder:rbac:groups=core,resources=namespaces,verbs=get
 
-func (r *PersistentVolumeClaimReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
-	_ = context.Background()
+func (r *PersistentVolumeClaimReconciler) Reconcile(context context.Context, req ctrl.Request) (ctrl.Result, error) {
 	logger := r.Log.WithValues("pvc", req.NamespacedName)
 
 	// your logic here
@@ -85,7 +84,7 @@ func (r *PersistentVolumeClaimReconciler) Reconcile(req ctrl.Request) (ctrl.Resu
 
 	// Fetch the GlobalRouteDiscovery instance
 	instance := &corev1.PersistentVolumeClaim{}
-	err := r.Get(context.TODO(), req.NamespacedName, instance)
+	err := r.Get(context, req.NamespacedName, instance)
 	if err != nil {
 		if errs.IsNotFound(err) {
 			// Request object not found, could have been deleted after reconcile request.
@@ -102,7 +101,7 @@ func (r *PersistentVolumeClaimReconciler) Reconcile(req ctrl.Request) (ctrl.Resu
 		logger:   logger,
 	}
 
-	ok, used, capacity, err := r.pollMetrics(reconcileContext)
+	ok, used, capacity, err := r.pollMetrics(context, reconcileContext)
 	if err != nil {
 		logger.Error(err, "unable to poll metrics for", "pvc", instance)
 		return r.manageError(err, reconcileContext)
@@ -133,7 +132,7 @@ func (r *PersistentVolumeClaimReconciler) Reconcile(req ctrl.Request) (ctrl.Resu
 		logger.V(1).Info("final", "value", newValue)
 		if newValue.Cmp(reconcileContext.instance.Spec.Resources.Requests[corev1.ResourceStorage]) == 1 {
 			reconcileContext.instance.Spec.Resources.Requests[corev1.ResourceStorage] = *newValue
-			err := r.Update(context.TODO(), reconcileContext.instance, &client.UpdateOptions{})
+			err := r.Update(context, reconcileContext.instance, &client.UpdateOptions{})
 			if err != nil {
 				logger.Error(err, "unable to update", "pvc", reconcileContext.instance)
 				return r.manageError(err, reconcileContext)
@@ -149,7 +148,7 @@ func (r *PersistentVolumeClaimReconciler) Reconcile(req ctrl.Request) (ctrl.Resu
 		//we need to kill the attached pods
 		logger.V(1).Info("we need to kill the attached pods")
 		podList := &corev1.PodList{}
-		err := r.List(context.TODO(), podList, &client.ListOptions{
+		err := r.List(context, podList, &client.ListOptions{
 			Namespace: reconcileContext.instance.Namespace,
 		})
 		if err != nil {
@@ -159,7 +158,7 @@ func (r *PersistentVolumeClaimReconciler) Reconcile(req ctrl.Request) (ctrl.Resu
 		toBeKilledPods := filterPods(reconcileContext, podList.Items)
 		logger.V(1).Info("to be killed pods", "len", len(toBeKilledPods))
 		for _, pod := range toBeKilledPods {
-			err := r.Delete(context.TODO(), &pod, &client.DeleteOptions{})
+			err := r.Delete(context, &pod, &client.DeleteOptions{})
 			if err != nil {
 				logger.Error(err, "unable to delete", "pod", pod.Name)
 				r.manageError(err, reconcileContext)
@@ -253,11 +252,11 @@ func (r *reconcileContext) getExtendUpTo() *resource.Quantity {
 func (r *PersistentVolumeClaimReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	isAnnotatedPVC := predicate.Funcs{
 		UpdateFunc: func(e event.UpdateEvent) bool {
-			value, _ := e.MetaNew.GetAnnotations()[autoExtendAnnotation]
+			value, _ := e.ObjectNew.GetAnnotations()[autoExtendAnnotation]
 			return value == "true"
 		},
 		CreateFunc: func(e event.CreateEvent) bool {
-			value, _ := e.Meta.GetAnnotations()[autoExtendAnnotation]
+			value, _ := e.Object.GetAnnotations()[autoExtendAnnotation]
 			return value == "true"
 		},
 		DeleteFunc: func(e event.DeleteEvent) bool {
@@ -291,7 +290,7 @@ func (r *PersistentVolumeClaimReconciler) getOauthToken(reconcileContext *reconc
 	return string(content)
 }
 
-func (r *PersistentVolumeClaimReconciler) pollMetrics(reconcileContext *reconcileContext) (available bool, used int64, capacity int64, err error) {
+func (r *PersistentVolumeClaimReconciler) pollMetrics(context context.Context, reconcileContext *reconcileContext) (available bool, used int64, capacity int64, err error) {
 	address, found := os.LookupEnv(prometheusEnvironmentVariable)
 	if !found {
 		address = defaultPrometheusAddress
@@ -325,7 +324,7 @@ func (r *PersistentVolumeClaimReconciler) pollMetrics(reconcileContext *reconcil
 		"Authorization": "Bearer " + r.getOauthToken(reconcileContext),
 	})
 
-	resultUsed, warnings, err := papi.Query(context.TODO(), "kubelet_volume_stats_used_bytes{namespace=\""+reconcileContext.instance.Namespace+"\",persistentvolumeclaim=\""+reconcileContext.instance.Name+"\"}", time.Now())
+	resultUsed, warnings, err := papi.Query(context, "kubelet_volume_stats_used_bytes{namespace=\""+reconcileContext.instance.Namespace+"\",persistentvolumeclaim=\""+reconcileContext.instance.Name+"\"}", time.Now())
 	if err != nil {
 		reconcileContext.logger.Error(err, "unable to query for used bytes", "query", "kubelet_volume_stats_used_bytes{namespace=\""+reconcileContext.instance.Namespace+"\",persistentvolumeclaim=\""+reconcileContext.instance.Name+"\"}")
 		return false, 0, 0, err
@@ -360,7 +359,7 @@ func (r *PersistentVolumeClaimReconciler) pollMetrics(reconcileContext *reconcil
 			return false, 0, 0, err
 		}
 	}
-	resultCapacity, warnings, err := papi.Query(context.TODO(), "kubelet_volume_stats_capacity_bytes{namespace=\""+reconcileContext.instance.Namespace+"\",persistentvolumeclaim=\""+reconcileContext.instance.Name+"\"}", time.Now())
+	resultCapacity, warnings, err := papi.Query(context, "kubelet_volume_stats_capacity_bytes{namespace=\""+reconcileContext.instance.Namespace+"\",persistentvolumeclaim=\""+reconcileContext.instance.Name+"\"}", time.Now())
 	if err != nil {
 		reconcileContext.logger.Error(err, "unable to query for capacity bytes", "query", "kubelet_volume_stats_capacity_bytes{namespace=\""+reconcileContext.instance.Namespace+"\",persistentvolumeclaim=\""+reconcileContext.instance.Name+"\"}")
 		return false, 0, 0, err
