@@ -5,4 +5,4 @@ kind: Kustomization
 images:
 - name: controller
   newName: quay.io/redhat-cop/volume-expander-operator
-  newTag: latest
+  newTag: v0.3.3
