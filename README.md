@@ -74,9 +74,17 @@ helm repo update
 helm upgrade volume-expander-operator volume-expander-operator/volume-expander-operator
 ```
 
+## Metrics
+
+Prometheus compatible metrics are exposed by the Operator and can be integrated into OpenShift's default cluster monitoring. To enable OpenShift cluster monitoring, label the namespace the operator is deployed in with the label `openshift.io/cluster-monitoring="true"`.
+
+```shell
+oc label namespace <namespace> openshift.io/cluster-monitoring="true"
+```
+
 ## Development
 
-## Running the operator locally
+### Running the operator locally
 
 ```shell
 oc new-project volume-expander-operator-local
@@ -110,26 +118,47 @@ Delete...
 helm delete volume-expander-operator-local -n volume-expander-operator-local
 ```
 
-## Building/Pushing the operator image
+### Building/Pushing the operator image
 
 ```shell
 export repo=raffaelespazzoli #replace with yours
+docker login quay.io/$repo
 make docker-build IMG=quay.io/$repo/volume-expander-operator:latest
 make docker-push IMG=quay.io/$repo/volume-expander-operator:latest
 ```
 
-## Deploy to OLM via bundle
+### Deploy to OLM via bundle
 
 ```shell
 make manifests
 make bundle IMG=quay.io/$repo/volume-expander-operator:latest
 operator-sdk bundle validate ./bundle --select-optional name=operatorhub
 make bundle-build BUNDLE_IMG=quay.io/$repo/volume-expander-operator-controller-bundle:latest
-podman push quay.io/$repo/volume-expander-operator-controller-bundle:latest
+docker push quay.io/$repo/volume-expander-operator-controller-bundle:latest
 operator-sdk bundle validate quay.io/$repo/volume-expander-operator-controller-bundle:latest --select-optional name=operatorhub
 oc new-project volume-expander-operator
+oc label namespace volume-expander-operator openshift.io/cluster-monitoring="true"
 operator-sdk cleanup volume-expander-operator -n volume-expander-operator
 operator-sdk run bundle --install-mode AllNamespaces -n volume-expander-operator quay.io/$repo/volume-expander-operator-controller-bundle:latest
+```
+
+### Testing
+
+#### Manual tests
+
+```shell
+oc new-project volume-expander-operator-test
+oc apply -f ./test/volume.yaml -n volume-expander-operator-test
+oc apply -f ./test/deployment.yaml -n volume-expander-operator-test
+```
+
+#### Testing metrics
+
+```sh
+export operatorNamespace=resource-locker-operator-local # or resource-locker-operator
+oc label namespace ${operatorNamespace} openshift.io/cluster-monitoring="true"
+oc rsh -n openshift-monitoring -c prometheus prometheus-k8s-0 /bin/bash
+curl -v -s -k -H "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" https://resource-locker-operator-controller-manager-metrics.${operatorNamespace}.svc.cluster.local:8443/metrics
 ```
 
 ## Releasing
@@ -159,12 +188,4 @@ git push upstream -f <tagname>
 operator-sdk cleanup volume-expander-operator -n volume-expander-operator
 oc delete operatorgroup operator-sdk-og
 oc delete catalogsource volume-expander-operator-catalog
-```
-
-## Manual tests
-
-```shell
-oc new-project volume-expander-operator-test
-oc apply -f ./test/volume.yaml -n volume-expander-operator-test
-oc apply -f ./test/deployment.yaml -n volume-expander-operator-test
 ```
