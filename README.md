@@ -155,10 +155,12 @@ oc apply -f ./test/deployment.yaml -n volume-expander-operator-test
 #### Testing metrics
 
 ```sh
-export operatorNamespace=resource-locker-operator-local # or resource-locker-operator
+export operatorNamespace=volume-expander-operator-local # or volume-expander-operator
 oc label namespace ${operatorNamespace} openshift.io/cluster-monitoring="true"
 oc rsh -n openshift-monitoring -c prometheus prometheus-k8s-0 /bin/bash
-curl -v -s -k -H "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" https://resource-locker-operator-controller-manager-metrics.${operatorNamespace}.svc.cluster.local:8443/metrics
+export operatorNamespace=volume-expander-operator-local # or volume-expander-operator
+curl -v -s -k -H "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" https://volume-expander-operator-controller-manager-metrics.${operatorNamespace}.svc.cluster.local:8443/metrics
+exit
 ```
 
 ## Releasing
