@@ -82,6 +82,17 @@ Prometheus compatible metrics are exposed by the Operator and can be integrated 
 oc label namespace <namespace> openshift.io/cluster-monitoring="true"
 ```
 
+### Testing metrics
+
+```sh
+export operatorNamespace=volume-expander-operator-local # or volume-expander-operator
+oc label namespace ${operatorNamespace} openshift.io/cluster-monitoring="true"
+oc rsh -n openshift-monitoring -c prometheus prometheus-k8s-0 /bin/bash
+export operatorNamespace=volume-expander-operator-local # or volume-expander-operator
+curl -v -s -k -H "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" https://volume-expander-operator-controller-manager-metrics.${operatorNamespace}.svc.cluster.local:8443/metrics
+exit
+```
+
 ## Development
 
 ### Running the operator locally
@@ -89,7 +100,7 @@ oc label namespace <namespace> openshift.io/cluster-monitoring="true"
 ```shell
 oc new-project volume-expander-operator-local
 kustomize build ./config/local-development | oc apply -f - -n volume-expander-operator-local
-export token=export token=$(oc serviceaccounts get-token 'volume-expander-operator-manager' -n volume-expander-operator-local)
+export token=export token=$(oc serviceaccounts get-token 'volume-expander-operator-controller-manager' -n volume-expander-operator-local)
 export base_domain=$(oc get dns cluster -o jsonpath='{.spec.baseDomain}')
 export prometheus_route=https://prometheus-k8s-openshift-monitoring.apps.${base_domain}
 oc login --token ${token}
@@ -150,17 +161,6 @@ operator-sdk run bundle --install-mode AllNamespaces -n volume-expander-operator
 oc new-project volume-expander-operator-test
 oc apply -f ./test/volume.yaml -n volume-expander-operator-test
 oc apply -f ./test/deployment.yaml -n volume-expander-operator-test
-```
-
-#### Testing metrics
-
-```sh
-export operatorNamespace=volume-expander-operator-local # or volume-expander-operator
-oc label namespace ${operatorNamespace} openshift.io/cluster-monitoring="true"
-oc rsh -n openshift-monitoring -c prometheus prometheus-k8s-0 /bin/bash
-export operatorNamespace=volume-expander-operator-local # or volume-expander-operator
-curl -v -s -k -H "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" https://volume-expander-operator-controller-manager-metrics.${operatorNamespace}.svc.cluster.local:8443/metrics
-exit
 ```
 
 ## Releasing

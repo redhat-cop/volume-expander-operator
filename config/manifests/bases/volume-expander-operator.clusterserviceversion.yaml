@@ -8,7 +8,8 @@ metadata:
     certified: "false"
     containerImage: quay.io/redhat-cop/volume-expander-operator
     createdAt: 10/14/2020
-    description: This operator provides automation expanding pod's volumes when they are about to run out of space.
+    description: This operator provides automation expanding pod's volumes when they
+      are about to run out of space.
     operatorframework.io/suggested-namespace: volume-expander-operator
     operators.operatorframework.io/builder: operator-sdk-v1.1.0
     operators.operatorframework.io/project_layout: go.kubebuilder.io/v2
