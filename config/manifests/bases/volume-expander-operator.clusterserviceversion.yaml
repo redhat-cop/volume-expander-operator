@@ -15,6 +15,7 @@ metadata:
     operators.operatorframework.io/project_layout: go.kubebuilder.io/v2
     repository: https://github.com/redhat-cop/volume-expander-operator
     support: Best Effort
+    operators.openshift.io/infrastructure-features: '["Disconnected"]'
   name: volume-expander-operator.v0.1.0
   namespace: placeholder
 spec:
