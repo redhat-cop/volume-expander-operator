@@ -33,7 +33,7 @@ It is recommended to deploy this operator via [`OperatorHub`](https://operatorhu
 | amd64  | &#x2611; |
 | arm64  | &#x2611;  |
 | ppc64le  | &#x2611;  |
-| s390x  | &#x2611;  |
+| s390x  | &#x2612;  |
 
 ### Deploying from OperatorHub
 
