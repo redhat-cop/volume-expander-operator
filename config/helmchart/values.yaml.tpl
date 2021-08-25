@@ -29,9 +29,9 @@ affinity: {}
 
 kube_rbac_proxy:
   image:
-    repository: gcr.io/kubebuilder/kube-rbac-proxy:v0.8.0
+    repository: gcr.io/kubebuilder/kube-rbac-proxy
     pullPolicy: IfNotPresent
-    tag: v0.5.0
+    tag: v0.8.0
   resources:
     requests:
       cpu: 100m
