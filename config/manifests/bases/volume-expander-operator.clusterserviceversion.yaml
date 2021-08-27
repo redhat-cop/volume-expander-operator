@@ -18,6 +18,11 @@ metadata:
     operators.openshift.io/infrastructure-features: '["Disconnected"]'
   name: volume-expander-operator.v0.1.0
   namespace: placeholder
+  labels:
+    operatorframework.io/os.linux: supported
+    operatorframework.io/arch.amd64: supported
+    operatorframework.io/arch.arm64: supported
+    operatorframework.io/arch.ppc64le: supported  
 spec:
   apiservicedefinitions: {}
   customresourcedefinitions: {}
