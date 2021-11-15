@@ -2,8 +2,25 @@ apiVersion: v1
 entries:
   volume-expander-operator:
   - apiVersion: v1
+    appVersion: v0.3.1
+    created: "2021-11-15T14:53:52.759982269Z"
+    description: Helm chart that deploys volume-expander-operator
+    digest: 5b2dd974546ecd312596cd3241b2e222f9d395f317e942bc047cf49f903edac3
+    keywords:
+    - volume
+    - storage
+    - csi
+    - expansion
+    - monitoring
+    name: volume-expander-operator
+    sources:
+    - https://github.com/redhat-cop/volume-expander-operator
+    urls:
+    - https://redhat-cop.github.io/volume-expander-operator/volume-expander-operator/volume-expander-operator-v0.3.1.tgz
+    version: v0.3.1
+  - apiVersion: v1
     appVersion: v0.3.0
-    created: "2021-08-28T14:07:41.938162668Z"
+    created: "2021-11-15T14:53:52.759469966Z"
     description: Helm chart that deploys volume-expander-operator
     digest: 5bfffcc53027253d27ad9066e73cea9f939de2d1ddfa0e737e43b07cfc979bbe
     keywords:
@@ -20,7 +37,7 @@ entries:
     version: v0.3.0
   - apiVersion: v1
     appVersion: v0.2.0
-    created: "2021-08-28T14:07:41.937700864Z"
+    created: "2021-11-15T14:53:52.758960564Z"
     description: Helm chart that deploys volume-expander-operator
     digest: 9f6bebcb72c8a5625cb98cb30d4bc2dd70a41b030d36086c7e1149346fbe6e0c
     keywords:
@@ -37,7 +54,7 @@ entries:
     version: v0.2.0
   - apiVersion: v1
     appVersion: v0.1.9
-    created: "2021-08-28T14:07:41.93718986Z"
+    created: "2021-11-15T14:53:52.758477562Z"
     description: Helm chart that deploys volume-expander-operator
     digest: a909282b6c990ee10e242ef8d30d93cd898e5d71ab82bee6f262e9202292e533
     keywords:
@@ -54,7 +71,7 @@ entries:
     version: v0.1.9
   - apiVersion: v1
     appVersion: v0.1.8
-    created: "2021-08-28T14:07:41.936795457Z"
+    created: "2021-11-15T14:53:52.75801036Z"
     description: Helm chart that deploys volume-expander-operator
     digest: 565e37151148e521ec733818617c60333ec7d512911a9952150f468185570adf
     keywords:
@@ -71,7 +88,7 @@ entries:
     version: v0.1.8
   - apiVersion: v1
     appVersion: v0.1.7
-    created: "2021-08-28T14:07:41.936436654Z"
+    created: "2021-11-15T14:53:52.757633958Z"
     description: Helm chart that deploys volume-expander-operator
     digest: f6e4a2c4dfba0d0afa7e5c64cc7938524ba52a82361643ecfcc99c8db9bc6bab
     keywords:
@@ -88,7 +105,7 @@ entries:
     version: v0.1.7
   - apiVersion: v1
     appVersion: v0.1.6
-    created: "2021-08-28T14:07:41.936037551Z"
+    created: "2021-11-15T14:53:52.757210756Z"
     description: Helm chart that deploys volume-expander-operator
     digest: 422dac4eff50352d7ae63272894ac9098a2381d6a6b0cfbf706db1cb890f56c2
     keywords:
@@ -105,7 +122,7 @@ entries:
     version: v0.1.6
   - apiVersion: v1
     appVersion: v0.1.5
-    created: "2021-08-28T14:07:41.935589947Z"
+    created: "2021-11-15T14:53:52.756561453Z"
     description: Helm chart that deploys volume-expander-operator
     digest: e9cd3599a477603e32a7dce2fae57388053c11b4eb47079644624954fe603cca
     keywords:
@@ -122,7 +139,7 @@ entries:
     version: v0.1.5
   - apiVersion: v1
     appVersion: v0.1.4
-    created: "2021-08-28T14:07:41.935131244Z"
+    created: "2021-11-15T14:53:52.755546848Z"
     description: Helm chart that deploys volume-expander-operator
     digest: a954e2363a1d1935b04f898081bc06d7097b2f6e7a3ee36e5e9f62a4b60de2f5
     keywords:
@@ -139,7 +156,7 @@ entries:
     version: v0.1.4
   - apiVersion: v1
     appVersion: v0.1.3
-    created: "2021-08-28T14:07:41.93462474Z"
+    created: "2021-11-15T14:53:52.754986646Z"
     description: Helm chart that deploys volume-expander-operator
     digest: 9441ec381880943c9a8d6c8d84faa91f851546258b1315d25504a24514ae0d4f
     keywords:
@@ -156,7 +173,7 @@ entries:
     version: v0.1.3
   - apiVersion: v1
     appVersion: v0.1.2
-    created: "2021-08-28T14:07:41.934384038Z"
+    created: "2021-11-15T14:53:52.754734245Z"
     description: Helm chart that deploys volume-expander-operator
     digest: c41815bb8d60308e8f75e622ea4d3c1caeabed42e60c8815956986707b3a553e
     keywords:
@@ -173,7 +190,7 @@ entries:
     version: v0.1.2
   - apiVersion: v1
     appVersion: v0.1.1
-    created: "2021-08-28T14:07:41.926557675Z"
+    created: "2021-11-15T14:53:52.754462343Z"
     description: Helm chart that deploys volume-expander-operator
     digest: 31c3a3312806625bd189352f176eb55a009e7971383fbca0cfafc6e4afbf2c1e
     keywords:
@@ -190,7 +207,7 @@ entries:
     version: v0.1.1
   - apiVersion: v1
     appVersion: v0.1.0
-    created: "2021-08-28T14:07:41.926358674Z"
+    created: "2021-11-15T14:53:52.754081842Z"
     description: Helm chart that deploys volume-expander-operator
     digest: abd156a660690bc79f83957f4bec29e65dfc77d1a8ccbc1bf4bcbb02f52b8474
     keywords:
@@ -205,4 +222,4 @@ entries:
     urls:
     - https://redhat-cop.github.io/volume-expander-operator/volume-expander-operator/volume-expander-operator-v0.1.0.tgz
     version: v0.1.0
-generated: "2021-08-28T14:07:41.92592167Z"
+generated: "2021-11-15T14:53:52.753457339Z"
