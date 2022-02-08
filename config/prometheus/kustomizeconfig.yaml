@@ -1,4 +1,6 @@
 ---
 varReference:
 - path: spec/endpoints/tlsConfig/serverName
-  kind: ServiceMonitor 
+  kind: ServiceMonitor
+- path: roleRef/name
+  kind: RoleBinding
