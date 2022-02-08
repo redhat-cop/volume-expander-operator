@@ -10,19 +10,21 @@ metadata:
     createdAt: 10/14/2020
     description: This operator provides automation expanding pod's volumes when they
       are about to run out of space.
+    operatorframework.io/cluster-monitoring: "true"
     operatorframework.io/suggested-namespace: volume-expander-operator
+    operators.openshift.io/infrastructure-features: '["Disconnected"]'
     operators.operatorframework.io/builder: operator-sdk-v1.1.0
     operators.operatorframework.io/project_layout: go.kubebuilder.io/v2
     repository: https://github.com/redhat-cop/volume-expander-operator
     support: Best Effort
-    operators.openshift.io/infrastructure-features: '["Disconnected"]'
-  name: volume-expander-operator.v0.1.0
-  namespace: placeholder
   labels:
-    operatorframework.io/os.linux: supported
     operatorframework.io/arch.amd64: supported
     operatorframework.io/arch.arm64: supported
-    operatorframework.io/arch.ppc64le: supported  
+    operatorframework.io/arch.ppc64le: supported
+    operatorframework.io/arch.s390x: supported
+    operatorframework.io/os.linux: supported
+  name: volume-expander-operator.v0.1.0
+  namespace: placeholder
 spec:
   apiservicedefinitions: {}
   customresourcedefinitions: {}
