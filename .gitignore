@@ -26,3 +26,4 @@ bundle
 bundle.Dockerfile
 charts
 maybash.sh
+config/local-development/tilt/replace-image.yaml

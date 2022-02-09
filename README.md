@@ -109,13 +109,11 @@ exit
 ### Running the operator locally
 
 ```shell
-oc new-project volume-expander-operator-local
-kustomize build ./config/local-development | oc apply -f - -n volume-expander-operator-local
-export token=export token=$(oc serviceaccounts get-token 'volume-expander-operator-controller-manager' -n volume-expander-operator-local)
-export base_domain=$(oc get dns cluster -o jsonpath='{.spec.baseDomain}')
-export prometheus_route=https://prometheus-k8s-openshift-monitoring.apps.${base_domain}
-oc login --token ${token}
-make run ENABLE_WEBHOOKS=false PROMETHEUS_URL=${prometheus_route} TOKEN=${token}
+export repo=raffaelespazzoli
+docker login quay.io/$repo
+oc new-project volume-expander-operator
+oc project volume-expander-operator
+tilt up
 ```
 
 ### Test helm chart locally
