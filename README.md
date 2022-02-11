@@ -108,6 +108,8 @@ exit
 
 ### Running the operator locally
 
+> Note: this operator build process is tested with [podman](https://podman.io/), but some of the build files (Makefile specifically) use docker because they are generated automatically by operator-sdk. It is recommended [remap the docker command to the podman command](https://developers.redhat.com/blog/2020/11/19/transitioning-from-docker-to-podman#transition_to_the_podman_cli).
+
 ```shell
 export repo=raffaelespazzoli
 docker login quay.io/$repo
