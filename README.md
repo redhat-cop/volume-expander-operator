@@ -108,14 +108,14 @@ exit
 
 ### Running the operator locally
 
+> Note: this operator build process is tested with [podman](https://podman.io/), but some of the build files (Makefile specifically) use docker because they are generated automatically by operator-sdk. It is recommended [remap the docker command to the podman command](https://developers.redhat.com/blog/2020/11/19/transitioning-from-docker-to-podman#transition_to_the_podman_cli).
+
 ```shell
-oc new-project volume-expander-operator-local
-kustomize build ./config/local-development | oc apply -f - -n volume-expander-operator-local
-export token=export token=$(oc serviceaccounts get-token 'volume-expander-operator-controller-manager' -n volume-expander-operator-local)
-export base_domain=$(oc get dns cluster -o jsonpath='{.spec.baseDomain}')
-export prometheus_route=https://prometheus-k8s-openshift-monitoring.apps.${base_domain}
-oc login --token ${token}
-make run ENABLE_WEBHOOKS=false PROMETHEUS_URL=${prometheus_route} TOKEN=${token}
+export repo=raffaelespazzoli
+docker login quay.io/$repo
+oc new-project volume-expander-operator
+oc project volume-expander-operator
+tilt up
 ```
 
 ### Test helm chart locally
