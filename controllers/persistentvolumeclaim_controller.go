@@ -324,9 +324,9 @@ func (r *PersistentVolumeClaimReconciler) pollMetrics(context context.Context, r
 		"Authorization": "Bearer " + r.getOauthToken(reconcileContext),
 	})
 
-	resultUsed, warnings, err := papi.Query(context, "kubelet_volume_stats_used_bytes{namespace=\""+reconcileContext.instance.Namespace+"\",persistentvolumeclaim=\""+reconcileContext.instance.Name+"\"}", time.Now())
+	resultUsed, warnings, err := papi.Query(context, "topk(1,kubelet_volume_stats_used_bytes{namespace=\""+reconcileContext.instance.Namespace+"\",persistentvolumeclaim=\""+reconcileContext.instance.Name+"\"})", time.Now())
 	if err != nil {
-		reconcileContext.logger.Error(err, "unable to query for used bytes", "query", "kubelet_volume_stats_used_bytes{namespace=\""+reconcileContext.instance.Namespace+"\",persistentvolumeclaim=\""+reconcileContext.instance.Name+"\"}")
+		reconcileContext.logger.Error(err, "unable to query for used bytes", "query", "topk(1,kubelet_volume_stats_used_bytes{namespace=\""+reconcileContext.instance.Namespace+"\",persistentvolumeclaim=\""+reconcileContext.instance.Name+"\"})")
 		return false, 0, 0, err
 	}
 	if len(warnings) > 0 {
@@ -359,9 +359,9 @@ func (r *PersistentVolumeClaimReconciler) pollMetrics(context context.Context, r
 			return false, 0, 0, err
 		}
 	}
-	resultCapacity, warnings, err := papi.Query(context, "kubelet_volume_stats_capacity_bytes{namespace=\""+reconcileContext.instance.Namespace+"\",persistentvolumeclaim=\""+reconcileContext.instance.Name+"\"}", time.Now())
+	resultCapacity, warnings, err := papi.Query(context, "topk(1,kubelet_volume_stats_capacity_bytes{namespace=\""+reconcileContext.instance.Namespace+"\",persistentvolumeclaim=\""+reconcileContext.instance.Name+"\"})", time.Now())
 	if err != nil {
-		reconcileContext.logger.Error(err, "unable to query for capacity bytes", "query", "kubelet_volume_stats_capacity_bytes{namespace=\""+reconcileContext.instance.Namespace+"\",persistentvolumeclaim=\""+reconcileContext.instance.Name+"\"}")
+		reconcileContext.logger.Error(err, "unable to query for capacity bytes", "query", "topk(1,kubelet_volume_stats_capacity_bytes{namespace=\""+reconcileContext.instance.Namespace+"\",persistentvolumeclaim=\""+reconcileContext.instance.Name+"\"})")
 		return false, 0, 0, err
 	}
 	if len(warnings) > 0 {
