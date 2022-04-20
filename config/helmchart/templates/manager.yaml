@@ -19,7 +19,7 @@ spec:
         {{- include "volume-expander-operator.selectorLabels" . | nindent 8 }}
         operator: volume-expander-operator
     spec:
-      serviceAccountName: volume-expander-operator-controller-manager
+      serviceAccountName: controller-manager
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
