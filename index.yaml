@@ -19,23 +19,6 @@ entries:
     - https://redhat-cop.github.io/volume-expander-operator/volume-expander-operator/volume-expander-operator-v0.3.4.tgz
     version: v0.3.4
   - apiVersion: v1
-    appVersion: 0.3.4
-    created: "2022-02-13T15:37:02.973315832Z"
-    description: Helm chart that deploys volume-expander-operator
-    digest: 16e358c09d83c53f393a69d32332bf21dfdcbd3b8b82d14db3739763d76e3657
-    keywords:
-    - volume
-    - storage
-    - csi
-    - expansion
-    - monitoring
-    name: volume-expander-operator
-    sources:
-    - https://github.com/redhat-cop/volume-expander-operator
-    urls:
-    - https://redhat-cop.github.io/volume-expander-operator/volume-expander-operator/volume-expander-operator-0.3.4.tgz
-    version: 0.3.4
-  - apiVersion: v1
     appVersion: v0.3.3
     created: "2022-02-13T15:37:02.978327573Z"
     description: Helm chart that deploys volume-expander-operator
@@ -52,23 +35,6 @@ entries:
     urls:
     - https://redhat-cop.github.io/volume-expander-operator/volume-expander-operator/volume-expander-operator-v0.3.3.tgz
     version: v0.3.3
-  - apiVersion: v1
-    appVersion: 0.3.3
-    created: "2022-02-13T15:37:02.972752228Z"
-    description: Helm chart that deploys volume-expander-operator
-    digest: a2b2ecf4b8a98db34701e0a8dd493124f389c163e4a18ea5e5b75652e217404a
-    keywords:
-    - volume
-    - storage
-    - csi
-    - expansion
-    - monitoring
-    name: volume-expander-operator
-    sources:
-    - https://github.com/redhat-cop/volume-expander-operator
-    urls:
-    - https://redhat-cop.github.io/volume-expander-operator/volume-expander-operator/volume-expander-operator-0.3.3.tgz
-    version: 0.3.3
   - apiVersion: v1
     appVersion: v0.3.2
     created: "2022-02-13T15:37:02.97797457Z"
